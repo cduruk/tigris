@@ -1,4 +1,4 @@
-load 'deploy' if respond_to?(:namespace) # cap2 differentiator
+load 'deploy' if respond_to?(:namespace) #Cap2 differentiator
 require 'rubygems'
-require 'railsless-deploy' # Removes railsisms from Capistrano
+require 'railsless-deploy'
 load 'config/deploy'
