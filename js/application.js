@@ -1,11 +1,54 @@
-var type,  format, sourceURL;
-type      = 'all';
-format    = 'event-stream';
-sourceURL = '/digg/stream?' + "&format=" + format;
+var Config = {
+  eventSourceURL : '/digg/stream?format=event-stream',
+  longPollURL    : '/digg/stream?return_after=1',
+  supportsEvents : false,
+};
+
+//ghetto feature detection
+if (typeof(EventSource) != 'undefined') {
+  Config.supportsEvents  = true;
+}
+
+function doLongPoll() {
+  new Ajax.Request(Config.longPollURL,
+    {
+      method:'get',
+      onSuccess: function(transport){
+         var response = transport.responseText;
+       },
+      //TODO: Do somehting sensible
+      onFailure: function(){ console.log('Something went wrong...') }
+    });
+}
+
+var Tigris = Class.create({
+  doLongPoll : function() {
+    new Ajax.Request(Config.longPollURL,
+      {
+        method:'get',
+        onSuccess: function(transport){
+          var response = transport.responseText || "no response text";
+          var result = response.evalJSON();
+          update(result);
+        },
+        //TODO: Do somehting sensible
+        onFailure: function(){ console.log('Something went wrong...') }
+      });
+  }
+});
+
+if (Config.supportsEvents) {
+  console.log(Config.eventSourceURL);
+  var source   = new EventSource(Config.eventSourceURL);
+  source.onmessage = function(event) {
+    var result = event.data.evalJSON();
+    update(result);
+  };
+} else {
+  var periodic = new PeriodicalExecuter(doLongPoll, 1);
+}
 
 var allItems = new Array();
-var counter  = 0;
-var source   = new EventSource(sourceURL);
 
 // Modules
 var Filters = {
@@ -114,17 +157,9 @@ var Filter = Class.create({
   },
 });
 
-document.observe("dom:loaded", function() {
-  var qf = new Filter('query-filter', 'query');
-  var uf = new Filter('user-filter', 'user');
-
-  qf.createElement();
-  uf.createElement();
-
-});
-
-source.onmessage = function(event) {
-  var result = event.data.evalJSON();
+//result is an object, not a json string
+//TODO: put this somewhere more sensible
+function update(result) {
   var tItem  = new TigrisItem(result.item.id, result.type, result.date, result.item.description, result.item.title, result.item.diggs);
   var dUser  = new DiggUser(result.user.fullname, result.user.name, result.user.icon);
   tItem.setUser(dUser);
@@ -140,4 +175,14 @@ source.onmessage = function(event) {
     Filters.counter++;
     allItems.push(tItem);
   }
-};
+}
+
+document.observe("dom:loaded", function() {
+  var qf = new Filter('query-filter', 'query');
+  var uf = new Filter('user-filter', 'user');
+
+  qf.createElement();
+  uf.createElement();
+
+  var t = new Tigris();
+});
