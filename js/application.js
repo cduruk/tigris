@@ -14,17 +14,17 @@ var Filters = {
   counter     : 0,
   maxItems    : 5,
 
-  setUserFilter: function(newValue){
+  setUserFilter: function(newValue) {
     this.userFilter = newValue;
   },
-  setQueryFilter: function(newValue){
+  setQueryFilter: function(newValue) {
     this.queryFilter = newValue;
   },
-  isQueryFilter: function(needle){
+  isQueryFilter: function(needle) {
     var query = this.queryFilter.toLowerCase();
     return needle.title.toLowerCase().include(query) || needle.description.toLowerCase().include(query);
   },
-  isUserFilter: function(needle){
+  isUserFilter: function(needle) {
     return needle.user.username.toLowerCase() == this.userFilter;
   },
   isFilter: function(needle) {
@@ -100,7 +100,7 @@ var Filter = Class.create({
   },
   changeFilter: function() {
     var newFilter = $(this.itemID).getValue();
-    switch(this.fType){
+    switch(this.fType) {
       case 'query':
         Filters.setQueryFilter(newFilter); break;
       case 'user':
@@ -129,7 +129,7 @@ source.onmessage = function(event) {
   var dUser  = new DiggUser(result.user.fullname, result.user.name, result.user.icon);
   tItem.setUser(dUser);
 
-  if(Filters.isOK(tItem))  {
+  if(Filters.isOK(tItem)) {
     var tItemDOM = tItem.getDOM();
     var dUserDOM = dUser.getDOM();
 
