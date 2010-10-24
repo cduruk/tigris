@@ -56,8 +56,6 @@ var Config = {
   maxItems       : 50
 };
 
-var allItems = new Array();
-
 // Modules
 var Filters = {
   userFilter  : '',
@@ -173,6 +171,8 @@ document.observe("dom:loaded", function() {
   uf.createElement();
 });
 
+var allItems = new Array();
 var t = new Tigris();
+
 t.initialize();
 t.run();

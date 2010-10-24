@@ -7,7 +7,6 @@ set :user, "cduruk"
 set :repository,  "git@github.com:cduruk/tigris.git"
 
 role :web, "linode"
-role :app, "linode"
 
 set :deploy_via, :export
 set :shared_children, []
