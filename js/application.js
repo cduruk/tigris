@@ -3,14 +3,47 @@ type      = 'all';
 format    = 'event-stream';
 sourceURL = '/digg/stream?' + "&format=" + format;
 
-var queryFilter = '';
-var userFilter  = '';
-
 var allItems = new Array();
 var counter  = 0;
 var source   = new EventSource(sourceURL);
 
-var filters;
+// Modules
+var Filters = {
+  userFilter  : '',
+  queryFilter : '',
+
+  setUserFilter: function(newValue){
+    this.userFilter = newValue;
+  },
+  setQueryFilter: function(newValue){
+    this.queryFilter = newValue;
+  },
+  isQueryFilter: function(needle){
+    var query = this.queryFilter.toLowerCase();
+    return needle.title.toLowerCase().include(query) || needle.description.toLowerCase().include(query);
+  },
+  isUserFilter: function(needle){
+    return needle.user.username.toLowerCase() == this.userFilter;
+  },
+  isFilter: function(needle) {
+    if ((this.userFilter == null || this.userFilter.length == 0) && (this.queryFilter == null || this.queryFilter.length == 0)) {
+      return true;
+    }
+    return this.isUserFilter(needle) && this.isQueryFilter(needle);
+  },
+  doesExist: function(needle) {
+    var isDupe = false;
+    allItems.each(function(item) {
+      if (item.id == needle.id) {
+        isDupe = true;;
+      }
+    });
+    return isDupe;
+  },
+  isOK: function(needle) {
+    return this.isFilter(needle) && !this.doesExist(needle);
+  }
+};
 
 //Class Definitions
 var TigrisItem = Class.create({
@@ -88,21 +121,24 @@ document.observe("dom:loaded", function() {
 });
 
 var Filters = {
+  userFilter  : '',
+  queryFilter : '',
+
   setUserFilter: function(newValue){
-    userFilter = newValue;
+    this.userFilter = newValue;
   },
   setQueryFilter: function(newValue){
-    queryFilter = newValue;
+    this.queryFilter = newValue;
   },
   isQueryFilter: function(needle){
-    var query = queryFilter.toLowerCase();
+    var query = this.queryFilter.toLowerCase();
     return needle.title.toLowerCase().include(query) || needle.description.toLowerCase().include(query);
   },
   isUserFilter: function(needle){
-    return needle.user.username.toLowerCase() == userFilter;
+    return needle.user.username.toLowerCase() == this.userFilter;
   },
   isFilter: function(needle) {
-    if ((userFilter == null || userFilter.length == 0) && (queryFilter == null || queryFilter.length == 0)) {
+    if ((this.userFilter == null || this.userFilter.length == 0) && (this.queryFilter == null || this.queryFilter.length == 0)) {
       return true;
     }
     return this.isUserFilter(needle) && this.isQueryFilter(needle);
