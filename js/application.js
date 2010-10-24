@@ -11,6 +11,8 @@ var source   = new EventSource(sourceURL);
 var Filters = {
   userFilter  : '',
   queryFilter : '',
+  counter     : 0,
+  maxItems    : 5,
 
   setUserFilter: function(newValue){
     this.userFilter = newValue;
@@ -41,7 +43,7 @@ var Filters = {
     return isDupe;
   },
   isOK: function(needle) {
-    return this.isFilter(needle) && !this.doesExist(needle);
+    return this.isFilter(needle) && !this.doesExist(needle) && this.counter < this.maxItems;
   }
 };
 
@@ -118,65 +120,24 @@ document.observe("dom:loaded", function() {
 
   qf.createElement();
   uf.createElement();
+
 });
-
-var Filters = {
-  userFilter  : '',
-  queryFilter : '',
-
-  setUserFilter: function(newValue){
-    this.userFilter = newValue;
-  },
-  setQueryFilter: function(newValue){
-    this.queryFilter = newValue;
-  },
-  isQueryFilter: function(needle){
-    var query = this.queryFilter.toLowerCase();
-    return needle.title.toLowerCase().include(query) || needle.description.toLowerCase().include(query);
-  },
-  isUserFilter: function(needle){
-    return needle.user.username.toLowerCase() == this.userFilter;
-  },
-  isFilter: function(needle) {
-    if ((this.userFilter == null || this.userFilter.length == 0) && (this.queryFilter == null || this.queryFilter.length == 0)) {
-      return true;
-    }
-    return this.isUserFilter(needle) && this.isQueryFilter(needle);
-  },
-  doesExist: function(needle) {
-    var isDupe = false;
-    allItems.each(function(item) {
-      if (item.id == needle.id) {
-        isDupe = true;;
-      }
-    });
-    return isDupe;
-  },
-  isOK: function(needle) {
-    return this.isFilter(needle) && !this.doesExist(needle);
-  }
-};
 
 source.onmessage = function(event) {
   var result = event.data.evalJSON();
   var tItem  = new TigrisItem(result.item.id, result.type, result.date, result.item.description, result.item.title, result.item.diggs);
   var dUser  = new DiggUser(result.user.fullname, result.user.name, result.user.icon);
   tItem.setUser(dUser);
-  // console.log(tItem);
 
-  if(counter < 50)  {
-      if (Filters.isOK(tItem)) {
-        var tItemDOM = tItem.getDOM();
-        var dUserDOM = dUser.getDOM();
+  if(Filters.isOK(tItem))  {
+    var tItemDOM = tItem.getDOM();
+    var dUserDOM = dUser.getDOM();
 
-        tItemDOM.insert(dUserDOM);
+    tItemDOM.insert(dUserDOM);
 
-        $('items').insert({top: tItemDOM});
+    $('items').insert({top: tItemDOM});
 
-        counter++;
-        allItems.push(tItem);
-        // console.log(result);
-      } //doesExist
-
-  } //counter
+    Filters.counter++;
+    allItems.push(tItem);
+  }
 };
