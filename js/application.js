@@ -95,11 +95,11 @@ var DiggUser = Class.create({
 
 var Filter = Class.create({
   initialize: function(itemID, fType, targetFilter) {
-    this.itemID       = itemID;
-    this.fType        = fType;
+    this.itemID = itemID;
+    this.fType  = fType;
   },
   changeFilter: function() {
-    var newFilter     = $(this.itemID).getValue();
+    var newFilter = $(this.itemID).getValue();
     switch(this.fType){
       case 'query':
         Filters.setQueryFilter(newFilter); break;
