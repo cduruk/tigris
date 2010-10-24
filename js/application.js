@@ -10,6 +10,8 @@ var allItems = new Array();
 var counter  = 0;
 var source   = new EventSource(sourceURL);
 
+var filters;
+
 //Class Definitions
 var TigrisItem = Class.create({
   initialize: function(id, itemType, timestamp, description, title, diggs, user) {
@@ -65,9 +67,9 @@ var Filter = Class.create({
     var newFilter     = $(this.itemID).getValue();
     switch(this.fType){
       case 'query':
-      setQueryFilter(newFilter); break;
+        Filters.setQueryFilter(newFilter); break;
       case 'user':
-      setUserFilter(newFilter); break;
+        Filters.setUserFilter(newFilter); break;
     }
   },
   createElement: function() {
@@ -89,33 +91,44 @@ function setQueryFilter(newValue) {
   queryFilter = newValue;
 }
 
-function setUserFilter(newValue) {
-  userFilter = newValue;
-}
-
-function doesExist(needle) {
-  var isDupe = false;
-  allItems.each(function(item) {
-    if (item.id == needle.id) {
-      isDupe = true;;
+var Filters = {
+  setUserFilter: function(newValue){
+    userFilter = newValue;
+  },
+  setQueryFilter: function(newValue){
+    queryFilter = newValue;
+  },
+  isQueryFilter: function(needle){
+    if (queryFilter == null || queryFilter.length == 0) {
+      return true;
     }
-  });
-  return isDupe;
-};
-
-function isQueryFilter(needle) {
-  if (queryFilter == null || queryFilter.length == 0) {
+    var query = queryFilter.toLowerCase();
+    return needle.title.toLowerCase().include(query) || needle.description.toLowerCase().include(query);
+  },
+  isUserFilter: function(needle){
+    if (userFilter == null || userFilter.length == 0) {
+      return true;
+    }
+    return needle.user.username.toLowerCase() == userFilter;
+  },
+  isFilter: function(needle) {
+    if ((userFilter == null || userFilter.length == 0) && (queryFilter == null || queryFilter.length == 0)) {
+      return true;
+    }
+    return this.isUserFilter(needle) && this.isQueryFilter(needle);
+  },
+  doesExist: function(needle) {
+    var isDupe = false;
+    allItems.each(function(item) {
+      if (item.id == needle.id) {
+        isDupe = true;;
+      }
+    });
+    return isDupe;
+  },
+  isOK: function(needle) {
     return true;
   }
-  var query = queryFilter.toLowerCase();
-  return needle.title.toLowerCase().include(query) || needle.description.toLowerCase().include(query);
-}
-
-function isUserFilter(needle) {
-  if (userFilter == null || userFilter.length == 0) {
-    return true;
-  }
-  return needle.user.username.toLowerCase() == userFilter;
 }
 
 source.onmessage = function(event) {
@@ -125,8 +138,8 @@ source.onmessage = function(event) {
   tItem.setUser(dUser);
   // console.log(tItem);
 
-  if(counter < 5)  {
-      if (!doesExist(tItem) && isQueryFilter(tItem) && isUserFilter(tItem)) {
+  if(counter < 50)  {
+      if (!Filters.doesExist(tItem) && Filters.isFilter(tItem)) {
         var tItemDOM = tItem.getDOM();
         var dUserDOM = dUser.getDOM();
 
