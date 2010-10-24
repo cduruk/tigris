@@ -45,7 +45,7 @@ if (Config.supportsEvents) {
     update(result);
   };
 } else {
-  var periodic = new PeriodicalExecuter(doLongPoll, 1);
+  var periodic = new PeriodicalExecuter(doLongPoll, 15);
 }
 
 var allItems = new Array();
