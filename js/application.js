@@ -3,7 +3,8 @@ type      = 'all';
 format    = 'event-stream';
 sourceURL = '/digg/stream?' + "&format=" + format;
 
-var filterWord = '';
+var queryFilter = '';
+var userFilter  = '';
 
 var allItems = new Array();
 var counter  = 0;
@@ -11,16 +12,20 @@ var source   = new EventSource(sourceURL);
 
 //Class Definitions
 var TigrisItem = Class.create({
-  initialize: function(id, itemType, timestamp, description, title, diggs) {
+  initialize: function(id, itemType, timestamp, description, title, diggs, user) {
     this.id          = id;
     this.itemType    = itemType;
     this.timestamp   = timestamp;
     this.description = description;
     this.title       = title;
     this.diggs       = diggs;
+    this.user        = null;
+  },
+  setUser: function(user) {
+    this.user = user;
   },
   getDOM: function() {
-    var item  = new Element('li', {'data-tigris-digg-id' : this.id});
+    var item  = new Element('li', {'class' : 'tigris-item:', 'data-tigris-digg-id' : this.id});
     var title = new Element('p',  {'class' : 'item title'}).update(this.title);
     var desc  = new Element('p',  {'class' : 'item desc'}).update(this.description);
 
@@ -51,25 +56,42 @@ var DiggUser = Class.create({
   }
 });
 
-var QuerySelector = Class.create({
-  initialize: function(itemID) {
-    this.itemID = itemID;
+var Filter = Class.create({
+  initialize: function(itemID, fType, targetFilter) {
+    this.itemID       = itemID;
+    this.fType        = fType;
   },
   changeFilter: function() {
-    var newFilter = $(this.itemID).getValue();
-    filterWord = newFilter;
+    var newFilter     = $(this.itemID).getValue();
+    switch(this.fType){
+      case 'query':
+      setQueryFilter(newFilter); break;
+      case 'user':
+      setUserFilter(newFilter); break;
+    }
   },
   createElement: function() {
-    var el = new Element('input', {'id' : this.itemID, 'class' : 'filter query', 'type' : 'text'});
+    var el = new Element('input', {'id' : this.itemID, 'class' : 'filter ' + this.fType, 'type' : 'text'});
     $('filters').insert(el);
     $(this.itemID).observe('keyup', this.changeFilter.bind(this))
   },
 });
 
 document.observe("dom:loaded", function() {
-  var qs = new QuerySelector('query-filter');
-  qs.createElement();
+  var qf = new Filter('query-filter', 'query');
+  var uf = new Filter('user-filter', 'user');
+
+  qf.createElement();
+  uf.createElement();
 });
+
+function setQueryFilter(newValue) {
+  queryFilter = newValue;
+}
+
+function setUserFilter(newValue) {
+  userFilter = newValue;
+}
 
 function doesExist(needle) {
   var isDupe = false;
@@ -81,21 +103,30 @@ function doesExist(needle) {
   return isDupe;
 };
 
-function isInFilter(query, needle) {
-  if (query == null || query.length == 0) {
+function isQueryFilter(needle) {
+  if (queryFilter == null || queryFilter.length == 0) {
     return true;
   }
-  var query = query.toLowerCase();
+  var query = queryFilter.toLowerCase();
   return needle.title.toLowerCase().include(query) || needle.description.toLowerCase().include(query);
+}
+
+function isUserFilter(needle) {
+  if (userFilter == null || userFilter.length == 0) {
+    return true;
+  }
+  return needle.user.username.toLowerCase() == userFilter;
 }
 
 source.onmessage = function(event) {
   var result = event.data.evalJSON();
   var tItem  = new TigrisItem(result.item.id, result.type, result.date, result.item.description, result.item.title, result.item.diggs);
   var dUser  = new DiggUser(result.user.fullname, result.user.name, result.user.icon);
+  tItem.setUser(dUser);
+  // console.log(tItem);
 
-  if(counter < 50 && isInFilter(filterWord, tItem))  {
-      if (!doesExist(tItem) && isInFilter(filterWord, tItem)) {
+  if(counter < 5)  {
+      if (!doesExist(tItem) && isQueryFilter(tItem) && isUserFilter(tItem)) {
         var tItemDOM = tItem.getDOM();
         var dUserDOM = dUser.getDOM();
 
@@ -105,7 +136,7 @@ source.onmessage = function(event) {
 
         counter++;
         allItems.push(tItem);
-        console.log(result);
+        // console.log(result);
       } //doesExist
 
   } //counter
