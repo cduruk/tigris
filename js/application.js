@@ -3,20 +3,31 @@ type      = 'all';
 format    = 'event-stream';
 sourceURL = '/digg/stream?' + "&format=" + format;
 
-var filterWord = 'toxic';
+var filterWord = '';
 
 var allItems = new Array();
-var counter = 0;
-var source = new EventSource(sourceURL);
+var counter  = 0;
+var source   = new EventSource(sourceURL);
 
 //Class Definitions
 var TigrisItem = Class.create({
-  initialize: function(id, itemType, timestamp, description, title) {
+  initialize: function(id, itemType, timestamp, description, title, diggs) {
     this.id          = id;
     this.itemType    = itemType;
     this.timestamp   = timestamp;
     this.description = description;
     this.title       = title;
+    this.diggs       = diggs;
+  },
+  getDOM: function() {
+    var item  = new Element('li', {'data-tigris-digg-id' : this.id});
+    var title = new Element('p',  {'class' : 'item title'}).update(this.title);
+    var desc  = new Element('p',  {'class' : 'item desc'}).update(this.description);
+
+    item.insert(title);
+    item.insert(desc);
+
+    return item;
   }
 });
 
@@ -25,6 +36,18 @@ var DiggUser = Class.create({
     this.fullname = fullname;
     this.username = username;
     this.iconURL  = iconURL;
+  },
+  getDOM: function() {
+    var user     = new Element('div', {'data-tigris-digg-userid' : this.id});
+    var userfull = new Element('p',   {'class' : 'user fullname'}).update(this.fullname);
+    var username = new Element('p',   {'class' : 'user username'}).update(this.username);
+    var usericon = new Element('img', {'class' : 'user icon', 'src' : this.iconURL});
+
+    user.insert(userfull);
+    user.insert(username);
+    user.insert({top : usericon});
+
+    return user;
   }
 });
 
@@ -34,7 +57,6 @@ var QuerySelector = Class.create({
   },
   changeFilter: function() {
     var newFilter = $(this.itemID).getValue();
-    console.log(newFilter);
     filterWord = newFilter;
   },
   createElement: function() {
@@ -60,38 +82,26 @@ function doesExist(needle) {
 };
 
 function isInFilter(query, needle) {
-  if (query.length == 0) {
+  if (query == null || query.length == 0) {
     return true;
   }
-  return needle.title.include(query) || needle.description.include(query);
+  var query = query.toLowerCase();
+  return needle.title.toLowerCase().include(query) || needle.description.toLowerCase().include(query);
 }
 
 source.onmessage = function(event) {
   var result = event.data.evalJSON();
-  var tItem  = new TigrisItem(result.item.id, result.type, result.date, result.item.description, result.item.title);
-  var tUser  = new DiggUser(result.user.fullname, result.user.username, result.user.icon);
+  var tItem  = new TigrisItem(result.item.id, result.type, result.date, result.item.description, result.item.title, result.item.diggs);
+  var dUser  = new DiggUser(result.user.fullname, result.user.name, result.user.icon);
 
   if(counter < 50 && isInFilter(filterWord, tItem))  {
-      var item  = new Element('li', {'data-tigris-digg-id' : tItem.id});
-      var title = new Element('p',  {'class' : 'item title'}).update(tItem.title);
-      var desc  = new Element('p',  {'class' : 'item desc'}).update(tItem.description);
-
-      var user     = new Element('div', {'data-tigris-digg-userid' : tUser.id});
-      var userfull = new Element('p',   {'class' : 'user fullname'}).update(tUser.fullname);
-      var username = new Element('p',   {'class' : 'user username'}).update(tUser.username);
-      var usericon = new Element('img', {'class' : 'user icon', 'src' : tUser.iconURL});
-
       if (!doesExist(tItem) && isInFilter(filterWord, tItem)) {
-        item.insert(title);
-        item.insert(desc);
+        var tItemDOM = tItem.getDOM();
+        var dUserDOM = dUser.getDOM();
 
-        user.insert(userfull);
-        user.insert(username);
-        user.insert({top : usericon});
+        tItemDOM.insert(dUserDOM);
 
-        item.insert(user);
-
-        $('items').insert({top: item});
+        $('items').insert({top: tItemDOM});
 
         counter++;
         allItems.push(tItem);
