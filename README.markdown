@@ -14,6 +14,13 @@ with Firefox 4.
 It currently expects server-sent events be sent from `/digg/stream`. During
 development, I setup a proxy with nginx, which worked great.
 
+Todo
+----
+
+* Use feature detection to make it work on FF.
+* Allow filtering by Digg/Submission/Comments.
+* Make it a lot less ugly.
+
 License
 -------
 
@@ -42,7 +49,5 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 Misc.
 -----
-
-It is pretty ugly right now.
 
 It is named after a Tigris river because I'm from Turkey and rivers stream.
