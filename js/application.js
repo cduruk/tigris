@@ -1,52 +1,60 @@
+var Tigris = Class.create({
+  initialize: function(){
+    //ghetto feature detection
+    if (typeof(EventSource) != 'undefined') {
+      Config.supportsEvents  = true;
+    }
+  },
+  doEventStreaming: function(){
+    var source       = new EventSource(Config.eventSourceURL);
+    source.onmessage = function(event) {
+      var result     = event.data.evalJSON();
+      this.updateList(result);
+    }.bind(this);
+  },
+  doLongPolling : function() {
+    new Ajax.Request(Config.longPollURL,
+      {
+        method:'get',
+        onComplete: function(transport){
+          var response = transport.responseText;
+          var result   = response.evalJSON();
+          this.updateList(result);
+          this.doLongPolling();
+        }.bind(this)
+      });
+  },
+  updateList : function(result) {
+    var tItem  = new TigrisItem(result.item.id, result.type, result.date, result.item.description, result.item.title, result.item.diggs);
+    var dUser  = new DiggUser(result.user.fullname, result.user.name, result.user.icon);
+    tItem.setUser(dUser);
+
+    if(Filters.isOK(tItem)) {
+      var tItemDOM = tItem.getDOM();
+      var dUserDOM = dUser.getDOM();
+
+      tItemDOM.insert(dUserDOM);
+
+      $('items').insert({top: tItemDOM});
+
+      Filters.counter++;
+      allItems.push(tItem);
+    }
+  },
+  run: function() {
+    if (Config.supportsEvents) {
+        this.doEventStreaming();
+      } else {
+        this.doLongPolling();
+    }
+  }
+});
+
 var Config = {
   eventSourceURL : '/digg/stream?format=event-stream',
   longPollURL    : '/digg/stream?return_after=1',
   supportsEvents : false,
 };
-
-//ghetto feature detection
-if (typeof(EventSource) != 'undefined') {
-  Config.supportsEvents  = true;
-}
-
-function doLongPoll() {
-  new Ajax.Request(Config.longPollURL,
-    {
-      method:'get',
-      onSuccess: function(transport){
-         var response = transport.responseText;
-       },
-      //TODO: Do somehting sensible
-      onFailure: function(){ console.log('Something went wrong...') }
-    });
-}
-
-var Tigris = Class.create({
-  doLongPoll : function() {
-    new Ajax.Request(Config.longPollURL,
-      {
-        method:'get',
-        onSuccess: function(transport){
-          var response = transport.responseText || "no response text";
-          var result = response.evalJSON();
-          update(result);
-        },
-        //TODO: Do somehting sensible
-        onFailure: function(){ console.log('Something went wrong...') }
-      });
-  }
-});
-
-if (Config.supportsEvents) {
-  console.log(Config.eventSourceURL);
-  var source   = new EventSource(Config.eventSourceURL);
-  source.onmessage = function(event) {
-    var result = event.data.evalJSON();
-    update(result);
-  };
-} else {
-  var periodic = new PeriodicalExecuter(doLongPoll, 15);
-}
 
 var allItems = new Array();
 
@@ -153,29 +161,9 @@ var Filter = Class.create({
   createElement: function() {
     var el = new Element('input', {'id' : this.itemID, 'class' : 'filter ' + this.fType, 'type' : 'text'});
     $('filters').insert(el);
-    $(this.itemID).observe('keyup', this.changeFilter.bind(this))
+    $(this.itemID).observe('keyup', this.changeFilter.bind(this));
   },
 });
-
-//result is an object, not a json string
-//TODO: put this somewhere more sensible
-function update(result) {
-  var tItem  = new TigrisItem(result.item.id, result.type, result.date, result.item.description, result.item.title, result.item.diggs);
-  var dUser  = new DiggUser(result.user.fullname, result.user.name, result.user.icon);
-  tItem.setUser(dUser);
-
-  if(Filters.isOK(tItem)) {
-    var tItemDOM = tItem.getDOM();
-    var dUserDOM = dUser.getDOM();
-
-    tItemDOM.insert(dUserDOM);
-
-    $('items').insert({top: tItemDOM});
-
-    Filters.counter++;
-    allItems.push(tItem);
-  }
-}
 
 document.observe("dom:loaded", function() {
   var qf = new Filter('query-filter', 'query');
@@ -184,5 +172,8 @@ document.observe("dom:loaded", function() {
   qf.createElement();
   uf.createElement();
 
-  var t = new Tigris();
 });
+
+var t = new Tigris();
+t.initialize();
+t.run();
