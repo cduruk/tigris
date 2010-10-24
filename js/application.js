@@ -87,10 +87,6 @@ document.observe("dom:loaded", function() {
   uf.createElement();
 });
 
-function setQueryFilter(newValue) {
-  queryFilter = newValue;
-}
-
 var Filters = {
   setUserFilter: function(newValue){
     userFilter = newValue;
@@ -99,16 +95,10 @@ var Filters = {
     queryFilter = newValue;
   },
   isQueryFilter: function(needle){
-    if (queryFilter == null || queryFilter.length == 0) {
-      return true;
-    }
     var query = queryFilter.toLowerCase();
     return needle.title.toLowerCase().include(query) || needle.description.toLowerCase().include(query);
   },
   isUserFilter: function(needle){
-    if (userFilter == null || userFilter.length == 0) {
-      return true;
-    }
     return needle.user.username.toLowerCase() == userFilter;
   },
   isFilter: function(needle) {
@@ -127,9 +117,9 @@ var Filters = {
     return isDupe;
   },
   isOK: function(needle) {
-    return true;
+    return this.isFilter(needle) && !this.doesExist(needle);
   }
-}
+};
 
 source.onmessage = function(event) {
   var result = event.data.evalJSON();
@@ -139,7 +129,7 @@ source.onmessage = function(event) {
   // console.log(tItem);
 
   if(counter < 50)  {
-      if (!Filters.doesExist(tItem) && Filters.isFilter(tItem)) {
+      if (Filters.isOK(tItem)) {
         var tItemDOM = tItem.getDOM();
         var dUserDOM = dUser.getDOM();
 
