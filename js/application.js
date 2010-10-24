@@ -54,6 +54,7 @@ var Config = {
   eventSourceURL : '/digg/stream?format=event-stream',
   longPollURL    : '/digg/stream?return_after=1',
   supportsEvents : false,
+  maxItems       : 50
 };
 
 var allItems = new Array();
@@ -63,7 +64,6 @@ var Filters = {
   userFilter  : '',
   queryFilter : '',
   counter     : 0,
-  maxItems    : 50,
 
   setUserFilter: function(newValue) {
     this.userFilter = newValue;
@@ -94,7 +94,7 @@ var Filters = {
     return isDupe;
   },
   isOK: function(needle) {
-    return this.isFilter(needle) && !this.doesExist(needle) && this.counter < this.maxItems;
+    return this.isFilter(needle) && !this.doesExist(needle) && this.counter < Config.maxItems;
   }
 };
 
