@@ -80,7 +80,7 @@ var DiggUser = Class.create({
     this.iconURL  = iconURL;
   },
   getDOM: function() {
-    var user     = new Element('div', {'data-tigris-digg-userid' : this.id});
+    var user     = new Element('div', {'class' : 'tigris-user', 'data-tigris-digg-userid' : this.id});
     var userfull = new Element('p',   {'class' : 'user fullname'}).update(this.fullname);
     var username = new Element('p',   {'class' : 'user username'}).update(this.username);
     var usericon = new Element('img', {'class' : 'user icon', 'src' : this.iconURL});
