@@ -62,7 +62,7 @@ var TigrisItem = Class.create({
     this.user = user;
   },
   getDOM: function() {
-    var item  = new Element('li', {'class' : 'tigris-item:', 'data-tigris-digg-id' : this.id});
+    var item  = new Element('li', {'class' : 'tigris-item', 'data-tigris-digg-id' : this.id});
     var title = new Element('p',  {'class' : 'item title'}).update(this.title);
     var desc  = new Element('p',  {'class' : 'item desc'}).update(this.description);
 
