@@ -1,6 +1,5 @@
 var Tigris = Class.create({
   initialize: function(){
-    //ghetto feature detection
     if (typeof(EventSource) != 'undefined') {
       Config.supportsEvents  = true;
     }
@@ -84,6 +83,7 @@ var Filters = {
     }
     return this.isUserFilter(needle) && this.isQueryFilter(needle);
   },
+  //This is necessary because submissions come as diggs too
   doesExist: function(needle) {
     var isDupe = false;
     allItems.each(function(item) {
@@ -171,7 +171,6 @@ document.observe("dom:loaded", function() {
 
   qf.createElement();
   uf.createElement();
-
 });
 
 var t = new Tigris();
