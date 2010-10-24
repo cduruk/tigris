@@ -14,12 +14,13 @@ with Firefox 4.
 It currently expects server-sent events be sent from `/digg/stream`. During
 development, I setup a proxy with nginx, which worked great.
 
-Todo
+TODO
 ----
 
 * Use feature detection to make it work on FF.
 * Allow filtering by Digg/Submission/Comments.
 * Make the maximum number configurable (hash? from the page?)
+* Highlight the search terms.
 * Make it a lot less ugly.
 
 License
