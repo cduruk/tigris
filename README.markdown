@@ -19,6 +19,7 @@ Todo
 
 * Use feature detection to make it work on FF.
 * Allow filtering by Digg/Submission/Comments.
+* Make the maximum number configurable (hash? from the page?)
 * Make it a lot less ugly.
 
 License

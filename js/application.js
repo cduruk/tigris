@@ -12,7 +12,7 @@ var Filters = {
   userFilter  : '',
   queryFilter : '',
   counter     : 0,
-  maxItems    : 5,
+  maxItems    : 50,
 
   setUserFilter: function(newValue) {
     this.userFilter = newValue;
