@@ -3,3 +3,25 @@ body {
   font: 16px/24px "Museo 300", Helvetica, Arial, sans-serif;
   margin-top: 0px;
 }
+
+ul {
+  list-style: none;
+}
+
+.tigris-item {
+  border-bottom: 1px solid #ccc;
+}
+
+#filter-container {
+  float:left;
+  width: 200px;
+}
+
+.filter {
+  display: block;
+}
+
+#content-container {
+  padding-left: 170px;
+  width: 600px;
+}
