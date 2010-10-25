@@ -2,7 +2,8 @@ body {
   background-color: #fff;
   font: 16px/24px "Museo 300", Helvetica, Arial, sans-serif;
   font-size: 0.875em;
-  margin-top: 0px;
+  margin-top: 10px;
+  margin-left:20px;
 }
 
 h1 {
