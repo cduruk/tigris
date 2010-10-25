@@ -37,7 +37,6 @@ var Tigris = Class.create({
     var tItem  = new TigrisItem(result.item.id, result.type, result.date, result.item.description, result.item.title, result.item.diggs, null, result.item.href, result.item.link);
     var dUser  = new DiggUser(result.user.fullname, result.user.name, result.user.icon);
     tItem.setUser(dUser);
-    console.log('updating');
     if(Filters.isOK(tItem)) {
       tItem.createElement();
       if ($$('.tigris-item-wrapper').length > Config.maxItems) {
@@ -80,8 +79,6 @@ var Filters = {
         return true;
     }
     var query = this.queryFilter.toLowerCase();
-    console.log(query);
-    console.log(needle.title);
     return needle.title.toLowerCase().include(query) || needle.description.toLowerCase().include(query);
   },
   isUserFilter: function(needle) {
