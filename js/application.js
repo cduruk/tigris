@@ -166,7 +166,15 @@ var Filter = Class.create({
     }
   },
   createElement: function() {
-    var el = new Element('input', {'id' : this.itemID, 'class' : 'filter ' + this.fType, 'type' : 'text'});
+    var label = new Element('label', {'for' : this.itemID});
+    switch(this.fType) {
+      case 'query':
+        label.update('Filter Items'); break;
+      case 'user':
+        label.update('Filter Users'); break;
+    }
+    var el    = new Element('input', {'id' : this.itemID, 'name' : this.itemID, 'class' : 'filter ' + this.fType, 'type' : 'text'});
+    $('filters').insert(label);
     $('filters').insert(el);
     $(this.itemID).observe('keyup', this.changeFilter.bind(this));
   },
