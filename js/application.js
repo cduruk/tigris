@@ -39,7 +39,7 @@ var Tigris = Class.create({
     var dUser  = new DiggUser(result.user.fullname, result.user.name, result.user.icon);
     tItem.setUser(dUser);
 
-    if(Filters.isOK(tItem) && allItems.length < 3) {
+    if(Filters.isOK(tItem)) {
       var tItemDOM = tItem.getDOM();
       var dUserDOM = dUser.getDOM();
 
