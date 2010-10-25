@@ -18,13 +18,39 @@ ul {
   list-style: none;
 }
 
-.tigris-item {
+.tigris-item-wrapper {
   border-bottom: 1px solid #ccc;
+  display:block;
+  overflow:auto;
+}
+
+.tigris-user {
+  margin-top: 15px;
+  float: left;
+  width: 90px;
+  overflow: none;
+  margin-bottom: 20px;
+}
+
+.tigris-item {
+  width: 500px;
+  padding-left:105px;
+}
+
+p.user {
+  margin: 0;
+  padding: 0;
+  font-size:12px;
 }
 
 #filter-container {
   float:left;
   width: 200px;
+}
+
+#content-container {
+  padding-left: 170px;
+  width: 700px;
 }
 
 .filter {
@@ -36,7 +62,6 @@ ul {
   width: 150px;
 }
 
-#content-container {
-  padding-left: 170px;
-  width: 600px;
+p.title {
+  font-weight: bold;
 }

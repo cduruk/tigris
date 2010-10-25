@@ -38,12 +38,12 @@ var Tigris = Class.create({
       var tItemDOM = tItem.getDOM();
       var dUserDOM = dUser.getDOM();
 
-      tItemDOM.insert(dUserDOM);
+      tItemDOM.insert({top:dUserDOM});
 
       $('items').insert({top: tItemDOM});
 
-      if ($$('.tigris-item').length > Config.maxItems) {
-        $$('.tigris-item').last().remove();
+      if ($$('.tigris-item-wrapper').length > Config.maxItems) {
+        $$('.tigris-item-wrapper').last().remove();
       }
 
       allItems.push(tItem);
@@ -62,7 +62,7 @@ var Config = {
   eventSourceURL : '/digg/stream?format=event-stream',
   longPollURL    : '/digg/stream?return_after=1',
   supportsEvents : false,
-  maxItems       : 5
+  maxItems       : 15
 };
 
 // Modules
@@ -120,14 +120,16 @@ var TigrisItem = Class.create({
     this.user = user;
   },
   getDOM: function() {
-    var item  = new Element('li', {'class' : 'tigris-item', 'data-tigris-digg-id' : this.id});
+    var cont  = new Element('li', {'class' : 'tigris-item-wrapper'});
+    var item  = new Element('div', {'class' : 'tigris-item', 'data-tigris-digg-id' : this.id});
     var title = new Element('p',  {'class' : 'item title'}).update(this.title);
     var desc  = new Element('p',  {'class' : 'item desc'}).update(this.description);
 
     item.insert(title);
     item.insert(desc);
+    cont.insert({top:item});
 
-    return item;
+    return cont;
   }
 });
 
@@ -139,13 +141,11 @@ var DiggUser = Class.create({
   },
   getDOM: function() {
     var user     = new Element('div', {'class' : 'tigris-user', 'data-tigris-digg-userid' : this.id});
-    var userfull = new Element('p',   {'class' : 'user fullname'}).update(this.fullname);
-    var username = new Element('p',   {'class' : 'user username'}).update(this.username);
+    var username = new Element('p',   {'class' : 'user username', 'title' : this.fullname}).update(this.username);
     var usericon = new Element('img', {'class' : 'user icon', 'src' : this.iconURL});
 
-    user.insert(userfull);
     user.insert(username);
-    user.insert({top : usericon});
+    user.insert(usericon);
 
     return user;
   }
