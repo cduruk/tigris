@@ -33,35 +33,16 @@ var Tigris = Class.create({
           }.bind(this)
         });
   },
-  //This method is too long :'(
   updateList : function(result) {
     var tItem  = new TigrisItem(result.item.id, result.type, result.date, result.item.description, result.item.title, result.item.diggs, null, result.item.href, result.item.link);
     var dUser  = new DiggUser(result.user.fullname, result.user.name, result.user.icon);
     tItem.setUser(dUser);
 
     if(Filters.isOK(tItem)) {
-      var tItemDOM = tItem.getDOM();
-      var dUserDOM = dUser.getDOM();
-
-      tItemDOM.insert({top:dUserDOM});
-
-      $('items').insert({top: tItemDOM});
-
-      $(tItem.id).on('mouseover', function(){
-         $(tItem.id).addClassName('hovered');
-         Config.goOn = false;
-       });
-
-      $(tItem.id).on('mouseout', function(){
-         $(tItem.id).removeClassName('hovered');
-         Config.goOn = true;
-         t.doLongPolling();
-      });
-
+      tItem.createElement();
       if ($$('.tigris-item-wrapper').length > Config.maxItems) {
         $$('.tigris-item-wrapper').last().remove();
       }
-
       allItems.push(tItem);
     }
   },
@@ -154,6 +135,25 @@ var TigrisItem = Class.create({
     cont.insert({top:item});
 
     return cont;
+  },
+  createElement: function() {
+    var tItemDOM = this.getDOM();
+    var dUserDOM = this.user.getDOM();
+
+    tItemDOM.insert({top:dUserDOM});
+
+    $('items').insert({top: tItemDOM});
+
+    $(this.id).on('mouseover', function(){
+       $(this.id).addClassName('hovered');
+       Config.goOn = false;
+     });
+
+    $(this.id).on('mouseout', function(){
+       $(this.id).removeClassName('hovered');
+       Config.goOn = true;
+       t.doLongPolling();
+    });
   }
 });
 
