@@ -35,11 +35,11 @@ var Tigris = Class.create({
   },
   //This method is too long :'(
   updateList : function(result) {
-    var tItem  = new TigrisItem(result.item.id, result.type, result.date, result.item.description, result.item.title, result.item.diggs);
+    var tItem  = new TigrisItem(result.item.id, result.type, result.date, result.item.description, result.item.title, result.item.diggs, null, result.item.href, result.item.link);
     var dUser  = new DiggUser(result.user.fullname, result.user.name, result.user.icon);
     tItem.setUser(dUser);
 
-    if(Filters.isOK(tItem)) {
+    if(Filters.isOK(tItem) && allItems.length < 3) {
       var tItemDOM = tItem.getDOM();
       var dUserDOM = dUser.getDOM();
 
@@ -124,7 +124,7 @@ var Filters = {
 
 //Class Definitions
 var TigrisItem = Class.create({
-  initialize: function(id, itemType, timestamp, description, title, diggs, user) {
+  initialize: function(id, itemType, timestamp, description, title, diggs, user, diggLink, realLink) {
     this.id          = id;
     this.itemType    = itemType;
     this.timestamp   = timestamp;
@@ -132,17 +132,24 @@ var TigrisItem = Class.create({
     this.title       = title;
     this.diggs       = diggs;
     this.user        = null;
+    this.diggLink    = diggLink;
+    this.realLink    = realLink;
   },
   setUser: function(user) {
     this.user = user;
   },
   getDOM: function() {
-    var cont  = new Element('li',  {'class' : 'tigris-item-wrapper', 'id' : this.id});
-    var item  = new Element('div', {'class' : 'tigris-item', 'data-tigris-digg-id' : this.id});
-    var title = new Element('p',   {'class' : 'item title'}).update(this.title);
-    var desc  = new Element('p',   {'class' : 'item desc'}).update(this.description);
+    var cont  = new Element('li',   {'class' : 'tigris-item-wrapper', 'id' : this.id});
+    var item  = new Element('div',  {'class' : 'tigris-item', 'data-tigris-digg-id' : this.id});
+    var title = new Element('span', {'class' : 'item title'}).update(this.title);
+    var link  = new Element('a',    {'class' : 'item real-link', 'href' : this.realLink}).update(title);
+    var space = new Element('span', {'class' : 'empty space'}).update('&nbsp;&nbsp;')
+    var dLink = new Element('a',    {'class' : 'item digg-link', 'href' : this.diggLink}).update('View on Digg');
+    var desc  = new Element('p',    {'class' : 'item desc'}).update(this.description);
 
-    item.insert(title);
+    item.insert(link);
+    item.insert(space);
+    item.insert(dLink);
     item.insert(desc);
     cont.insert({top:item});
 

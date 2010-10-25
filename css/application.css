@@ -34,6 +34,7 @@ ul {
 }
 
 .tigris-item {
+  margin-top: 15px;
   width: 500px;
   padding-left:105px;
 }
@@ -62,8 +63,12 @@ p.user {
   width: 150px;
 }
 
-p.title {
+span.title {
   font-weight: bold;
+}
+
+a.digg-link {
+  font-size:11px;
 }
 
 .hovered {
