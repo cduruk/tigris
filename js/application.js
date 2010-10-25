@@ -33,6 +33,7 @@ var Tigris = Class.create({
           }.bind(this)
         });
   },
+  //This method is too long :'(
   updateList : function(result) {
     var tItem  = new TigrisItem(result.item.id, result.type, result.date, result.item.description, result.item.title, result.item.diggs);
     var dUser  = new DiggUser(result.user.fullname, result.user.name, result.user.icon);
