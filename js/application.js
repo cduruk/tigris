@@ -6,7 +6,7 @@ var Tigris = Class.create({
     }
     var hashStr = window.location.hash;
     //Check if integer
-    if (hashStr != 'undefined' && hashStr.substring(1)%1 == 0) {
+    if (hashStr.length != 0 && hashStr.substring(1)%1 == 0) {
       Config.maxItems = hashStr.substring(1);
     }
   },
