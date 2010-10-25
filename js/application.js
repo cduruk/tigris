@@ -198,9 +198,9 @@ var Filter = Class.create({
     var label = new Element('label', {'for' : this.itemID});
     switch(this.fType) {
       case 'query':
-        label.update('Filter Items'); break;
+        label.update('Filter by Keyword'); break;
       case 'user':
-        label.update('Filter Users'); break;
+        label.update('Filter by Username'); break;
     }
     var el    = new Element('input', {'id' : this.itemID, 'name' : this.itemID, 'class' : 'filter ' + this.fType, 'type' : 'text'});
     $('filters').insert(label);
