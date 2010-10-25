@@ -77,6 +77,8 @@ var Filters = {
   },
   isQueryFilter: function(needle) {
     var query = this.queryFilter.toLowerCase();
+    console.log(query);
+    console.log(needle.title);
     return needle.title.toLowerCase().include(query) || needle.description.toLowerCase().include(query);
   },
   isUserFilter: function(needle) {
