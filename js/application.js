@@ -20,18 +20,18 @@ var Tigris = Class.create({
     }.bind(this);
   },
   doLongPolling : function() {
-    if (Config.goOn){
       new Ajax.Request(Config.longPollURL,
         {
           method:'get',
           onComplete: function(transport){
             var response = transport.responseText;
             var result   = response.evalJSON();
-            this.updateList(result);
-            this.doLongPolling();
+            if (Config.goOn) {
+              this.updateList(result);
+              this.doLongPolling();
+            }
           }.bind(this)
         });
-    }
   },
   updateList : function(result) {
     var tItem  = new TigrisItem(result.item.id, result.type, result.date, result.item.description, result.item.title, result.item.diggs);
