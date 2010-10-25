@@ -143,6 +143,11 @@ var TigrisItem = Class.create({
     tItemDOM.insert({top:dUserDOM});
 
     $('items').insert({top: tItemDOM});
+    tItemDOM.setStyle('overflow:hidden');
+
+    var h = tItemDOM.getHeight();
+    tItemDOM.setStyle('height:0px');
+    tItemDOM.morph('height:'+h+'px',{ duration: .3 });
 
     $(this.id).on('mouseover', function(){
        $(this.id).addClassName('hovered');
