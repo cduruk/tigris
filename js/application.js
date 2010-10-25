@@ -1,7 +1,13 @@
 var Tigris = Class.create({
   initialize: function(){
+    //Feature Detection
     if (typeof(EventSource) != 'undefined') {
       Config.supportsEvents  = true;
+    }
+    var hashStr = window.location.hash;
+    //Check if integer
+    if (hashStr != 'undefined' && hashStr.substring(1)%1 == 0) {
+      Config.maxItems = hashStr.substring(1);
     }
   },
   doEventStreaming: function(){
@@ -36,7 +42,10 @@ var Tigris = Class.create({
 
       $('items').insert({top: tItemDOM});
 
-      Filters.counter++;
+      if ($$('.tigris-item').length > Config.maxItems) {
+        $$('.tigris-item').last().remove();
+      }
+
       allItems.push(tItem);
     }
   },
@@ -53,7 +62,7 @@ var Config = {
   eventSourceURL : '/digg/stream?format=event-stream',
   longPollURL    : '/digg/stream?return_after=1',
   supportsEvents : false,
-  maxItems       : 50
+  maxItems       : 5
 };
 
 // Modules
@@ -92,7 +101,7 @@ var Filters = {
     return isDupe;
   },
   isOK: function(needle) {
-    return this.isFilter(needle) && !this.doesExist(needle) && this.counter < Config.maxItems;
+    return this.isFilter(needle) && !this.doesExist(needle);
   }
 };
 
