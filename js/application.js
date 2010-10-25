@@ -171,7 +171,7 @@ var DiggUser = Class.create({
   getDOM: function() {
     var user     = new Element('div', {'class' : 'tigris-user', 'data-tigris-digg-userid' : this.id});
     var username = new Element('p',   {'class' : 'user username', 'title' : this.fullname}).update(this.username);
-    var usericon = new Element('img', {'class' : 'user icon', 'src' : this.iconURL, 'width' : '48px', 'height' : '48px'});
+    var usericon = new Element('img', {'class' : 'user icon', 'src' : this.iconURL, 'width' : '24px', 'height' : '24px'});
 
     user.insert(username);
     user.insert(usericon);
