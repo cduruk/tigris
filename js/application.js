@@ -13,34 +13,48 @@ var Tigris = Class.create({
   doEventStreaming: function(){
     var source       = new EventSource(Config.eventSourceURL);
     source.onmessage = function(event) {
-      var result     = event.data.evalJSON();
-      this.updateList(result);
+      if (Config.goOn) {
+        var result     = event.data.evalJSON();
+        this.updateList(result);
+      }
     }.bind(this);
   },
   doLongPolling : function() {
-    new Ajax.Request(Config.longPollURL,
-      {
-        method:'get',
-        onComplete: function(transport){
-          var response = transport.responseText;
-          var result   = response.evalJSON();
-          this.updateList(result);
-          this.doLongPolling();
-        }.bind(this)
-      });
+    if (Config.goOn){
+      new Ajax.Request(Config.longPollURL,
+        {
+          method:'get',
+          onComplete: function(transport){
+            var response = transport.responseText;
+            var result   = response.evalJSON();
+            this.updateList(result);
+            this.doLongPolling();
+          }.bind(this)
+        });
+    }
   },
   updateList : function(result) {
     var tItem  = new TigrisItem(result.item.id, result.type, result.date, result.item.description, result.item.title, result.item.diggs);
     var dUser  = new DiggUser(result.user.fullname, result.user.name, result.user.icon);
     tItem.setUser(dUser);
 
-    if(Filters.isOK(tItem)) {
+    if(Filters.isOK(tItem) && allItems.length < 40) {
       var tItemDOM = tItem.getDOM();
       var dUserDOM = dUser.getDOM();
 
       tItemDOM.insert({top:dUserDOM});
 
       $('items').insert({top: tItemDOM});
+
+      $(tItem.id).on('mouseover', function(){
+         $(tItem.id).addClassName('hovered');
+         Config.goOn = false;
+       });
+
+      $(tItem.id).on('mouseout', function(){
+         $(tItem.id).removeClassName('hovered');
+         Config.goOn = true;
+      });
 
       if ($$('.tigris-item-wrapper').length > Config.maxItems) {
         $$('.tigris-item-wrapper').last().remove();
@@ -62,7 +76,8 @@ var Config = {
   eventSourceURL : '/digg/stream?format=event-stream',
   longPollURL    : '/digg/stream?return_after=1',
   supportsEvents : false,
-  maxItems       : 15
+  maxItems       : 15,
+  goOn           : true
 };
 
 // Modules
@@ -120,10 +135,10 @@ var TigrisItem = Class.create({
     this.user = user;
   },
   getDOM: function() {
-    var cont  = new Element('li', {'class' : 'tigris-item-wrapper'});
+    var cont  = new Element('li',  {'class' : 'tigris-item-wrapper', 'id' : this.id});
     var item  = new Element('div', {'class' : 'tigris-item', 'data-tigris-digg-id' : this.id});
-    var title = new Element('p',  {'class' : 'item title'}).update(this.title);
-    var desc  = new Element('p',  {'class' : 'item desc'}).update(this.description);
+    var title = new Element('p',   {'class' : 'item title'}).update(this.title);
+    var desc  = new Element('p',   {'class' : 'item desc'}).update(this.description);
 
     item.insert(title);
     item.insert(desc);

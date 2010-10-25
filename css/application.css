@@ -3,7 +3,7 @@ body {
   font: 16px/24px "Museo 300", Helvetica, Arial, sans-serif;
   font-size: 0.875em;
   margin-top: 10px;
-  margin-left:20px;
+  margin-left: 20px;
 }
 
 h1 {
@@ -65,4 +65,8 @@ p.user {
 
 p.title {
   font-weight: bold;
+}
+
+.hovered {
+  background-color: #DDF;
 }
