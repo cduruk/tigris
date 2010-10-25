@@ -22,6 +22,7 @@ var Tigris = Class.create({
       {
         method:'get',
         onComplete: function(transport){
+          console.log('here');
           var response = transport.responseText;
           var result   = response.evalJSON();
           this.updateList(result);
