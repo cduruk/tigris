@@ -1,7 +1,17 @@
 body {
   background-color: #fff;
   font: 16px/24px "Museo 300", Helvetica, Arial, sans-serif;
+  font-size: 0.875em;
   margin-top: 0px;
+}
+
+h1 {
+  padding-top: 15px;
+  text-transform: uppercase;
+}
+
+li p {
+  font-size: 13px;
 }
 
 ul {
@@ -19,6 +29,11 @@ ul {
 
 .filter {
   display: block;
+  padding-bottom:10px;
+  margin-bottom:30px;
+  font-size: 18px;
+  font-weight: bold;
+  width: 150px;
 }
 
 #content-container {
