@@ -16,6 +16,7 @@ var Tigris = Class.create({
       if (Config.goOn) {
         var result = event.data.evalJSON();
         this.updateList(result);
+        console.log(result);
       }
     }.bind(this);
   },
@@ -34,16 +35,13 @@ var Tigris = Class.create({
         });
   },
   updateList : function(result) {
-    console.log(result);
-    var tItem  = new DiggStory(result.item.id, result.type, result.date, result.item.description, result.item.title, result.item.diggs, null, result.item.href, result.item.link);
-    var dUser  = new DiggUser(result.user.fullname, result.user.name, result.user.icon);
-    tItem.setUser(dUser);
-    if(Filters.isOK(tItem)) {
-      tItem.createElement();
+    var tigItem = new TigrisItem(result);
+    if(Filters.isOK(tigItem)) {
+      tigItem.createElement();
       if ($$('.tigris-item-wrapper').length > Config.maxItems) {
         $$('.tigris-item-wrapper').last().remove();
       }
-      allItems.push(tItem);
+      allItems.push(tigItem);
     }
   },
   run: function() {
@@ -98,8 +96,9 @@ var Filters = {
   doesExist: function(needle) {
     var isDupe = false;
     allItems.each(function(item) {
-      if (item.id == needle.id) {
-        isDupe = true;;
+      //TODO: Think about this...
+      if (item.item.id == needle.item.id) {
+        isDupe = true;
       }
     });
     return isDupe;
@@ -110,20 +109,37 @@ var Filters = {
 };
 
 //Class Definitions
+var TigrisItem = Class.create({
+    initialize: function(payload) {
+        this.itemType = payload.type;
+        this.user = new DiggUser(payload.user);
+        this.item = new DiggStory(payload.item);
+        if (this.itemType === 'comment') {
+            this.comment = DiggComment(payload.text, payload.diggs, payload.buries, payload.date_created);
+        }
+    },
+    setType: function(itemType) {
+        this.itemType = itemType;
+    },
+    setUser: function(user) {
+        this.user = user;
+    },
+    setItem: function(item) {
+        this.item = item;
+    },
+    createElement: function() {
+        this.item.createElement();
+    }
+});
+
 var DiggStory = Class.create({
-  initialize: function(id, itemType, timestamp, description, title, diggs, user, diggLink, realLink) {
-    this.id          = id;
-    this.itemType    = itemType;
-    this.timestamp   = timestamp;
-    this.description = description;
-    this.title       = title;
-    this.diggs       = diggs;
-    this.user        = null;
-    this.diggLink    = diggLink;
-    this.realLink    = realLink;
-  },
-  setUser: function(user) {
-    this.user = user;
+  initialize: function(payload) {
+    this.id          = payload.id;
+    this.description = payload.description;
+    this.title       = payload.title;
+    this.diggs       = payload.diggs;
+    this.diggLink    = payload.href;
+    this.realLink    = payload.link;
   },
   getDOM: function() {
     var cont  = new Element('li',   {'class' : 'tigris-item-wrapper', 'id' : this.id});
@@ -144,9 +160,6 @@ var DiggStory = Class.create({
   },
   createElement: function() {
     var tItemDOM = this.getDOM();
-    var dUserDOM = this.user.getDOM();
-
-    tItemDOM.insert({top:dUserDOM});
 
     $('items').insert({top: tItemDOM});
     tItemDOM.setStyle('overflow:hidden');
@@ -170,11 +183,20 @@ var DiggStory = Class.create({
   }
 });
 
+var DiggComment = Class.create({
+    initialize: function(text, diggs, buries, date_created) {
+        this.text = text;
+        this.buries = buries;
+        this.diggs = diggs;
+        this.timestamp = date_created;
+    }
+})
+
 var DiggUser = Class.create({
-  initialize: function(fullname, username, iconURL) {
-    this.fullname = fullname;
-    this.username = username;
-    this.iconURL  = iconURL;
+  initialize: function(payload) {
+    this.fullname = payload.fullname;
+    this.username = payload.name;
+    this.iconURL  = payload.icon;
   },
   getDOM: function() {
     var user     = new Element('div', {'class' : 'tigris-user', 'data-tigris-digg-userid' : this.id});
