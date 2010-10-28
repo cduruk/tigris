@@ -115,7 +115,7 @@ var TigrisItem = Class.create({
         this.user = new DiggUser(payload.user);
         this.item = new DiggStory(payload.item);
         if (this.itemType === 'comment') {
-            this.comment = DiggComment(payload.text, payload.diggs, payload.buries, payload.date_created);
+            this.comment = new DiggComment(payload.text, payload.diggs, payload.buries, payload.date_created);
         }
     },
     setType: function(itemType) {
