@@ -162,7 +162,9 @@ var TigrisItem = Class.create({
     $(this.id).on('mouseout', function(){
        $(this.id).removeClassName('hovered');
        Config.goOn = true;
-       t.doLongPolling();
+       if (!Config.supportsEvents) {
+           t.doLongPolling();
+       }
     });
   }
 });
