@@ -16,7 +16,6 @@ var Tigris = Class.create({
       if (Config.goOn) {
         var result = event.data.evalJSON();
         this.updateList(result);
-        console.log(result);
       }
     }.bind(this);
   },
