@@ -14,7 +14,7 @@ var Tigris = Class.create({
     var source       = new EventSource(Config.eventSourceURL);
     source.onmessage = function(event) {
       if (Config.goOn) {
-        var result     = event.data.evalJSON();
+        var result = event.data.evalJSON();
         this.updateList(result);
       }
     }.bind(this);
@@ -34,7 +34,8 @@ var Tigris = Class.create({
         });
   },
   updateList : function(result) {
-    var tItem  = new TigrisItem(result.item.id, result.type, result.date, result.item.description, result.item.title, result.item.diggs, null, result.item.href, result.item.link);
+    console.log(result);
+    var tItem  = new DiggStory(result.item.id, result.type, result.date, result.item.description, result.item.title, result.item.diggs, null, result.item.href, result.item.link);
     var dUser  = new DiggUser(result.user.fullname, result.user.name, result.user.icon);
     tItem.setUser(dUser);
     if(Filters.isOK(tItem)) {
@@ -109,7 +110,7 @@ var Filters = {
 };
 
 //Class Definitions
-var TigrisItem = Class.create({
+var DiggStory = Class.create({
   initialize: function(id, itemType, timestamp, description, title, diggs, user, diggLink, realLink) {
     this.id          = id;
     this.itemType    = itemType;
