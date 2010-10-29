@@ -53,7 +53,7 @@ var Tigris = Class.create({
 });
 
 var Config = {
-  eventSourceURL : '/digg/stream?format=event-stream',
+  eventSourceURL : '/digg/stream?format=event-stream&types=submission,digg',
   longPollURL    : '/digg/stream?return_after=1',
   supportsEvents : false,
   maxItems       : 15,
@@ -110,12 +110,13 @@ var Filters = {
 //Class Definitions
 var TigrisItem = Class.create({
     initialize: function(payload) {
-        this.itemType = payload.type;
+        this.type = payload.type;
         this.user = new DiggUser(payload.user);
         this.item = new DiggStory(payload.item);
-        if (this.itemType === 'comment') {
+        if (this.type === 'comment') {
             this.comment = new DiggComment(payload.text, payload.diggs, payload.buries, payload.date_created);
         }
+        this.id = this.type + "-" + this.item.id;
     },
     setType: function(itemType) {
         this.itemType = itemType;
@@ -127,7 +128,64 @@ var TigrisItem = Class.create({
         this.item = item;
     },
     createElement: function() {
-        this.item.createElement();
+        var resultDOM = null;
+        var wrapper = new Element('li',   {'class' : 'tigris-item-wrapper', 'id' : this.id});
+
+        switch(this.type) {
+            case 'submission':
+                resultDOM = this.getSubmissionDOM(); break;
+            case 'digg':
+                resultDOM = this.getDiggDOM(); break;
+            case 'comment':
+                resultDOM = this.getCommentDOM(); break;
+        }
+
+        resultDOM = wrapper.insert({top:resultDOM});
+        this.addToList(resultDOM);
+        this.handleMouseOver();
+    },
+    handleMouseOver: function() {
+        $(this.id).on('mouseover', function(){
+           $(this.id).addClassName('hovered');
+           Config.goOn = false;
+         });
+
+        $(this.id).on('mouseout', function(){
+           $(this.id).removeClassName('hovered');
+           Config.goOn = true;
+           if (!Config.supportsEvents) {
+               t.doLongPolling();
+           }
+        });
+    },
+    addToList: function(payload) {
+        payload.setStyle('overflow:hidden');
+        $('items').insert({top: payload});
+
+        var h = payload.getHeight();
+        payload.setStyle('height:0px');
+        payload.morph('height:'+h+'px',{ duration: .3 });
+
+    },
+    getSubmissionDOM: function() {
+        var div     = new Element('div');
+        var span    = this.user.getActivityDOM('submission');
+        var itemDOM = this.item.getDOM();
+
+        div.insert({top : span});
+        div.insert(itemDOM);
+
+        return div;
+    },
+    getDiggDOM: function() {
+        var div     = new Element('div');
+        var span    = this.user.getActivityDOM('digg');
+        var itemDOM = this.item.getDOM();
+
+        div.insert({top : span});
+        div.insert(itemDOM);
+
+        return div;
     }
 });
 
@@ -141,7 +199,6 @@ var DiggStory = Class.create({
     this.realLink    = payload.link;
   },
   getDOM: function() {
-    var cont  = new Element('li',   {'class' : 'tigris-item-wrapper', 'id' : this.id});
     var item  = new Element('div',  {'class' : 'tigris-item', 'data-tigris-digg-id' : this.id});
     var title = new Element('span', {'class' : 'item title'}).update(this.title);
     var link  = new Element('a',    {'class' : 'item real-link', 'href' : this.realLink}).update(title);
@@ -153,9 +210,8 @@ var DiggStory = Class.create({
     item.insert(space);
     item.insert(dLink);
     item.insert(desc);
-    cont.insert({top:item});
 
-    return cont;
+    return item;
   },
   createElement: function() {
     var tItemDOM = this.getDOM();
@@ -206,6 +262,25 @@ var DiggUser = Class.create({
     user.insert(usericon);
 
     return user;
+  },
+  getUserLink: function() {
+      return "http://digg.com/" + this.username;
+  },
+  getActivityDOM: function(type) {
+      var span  = new Element('span', {'class' : 'userline'});
+      var ulink = new Element('a',    {'class' : 'userlink', 'href' : this.getUserLink()}).update(this.username);
+      var div   = new Element('div');
+
+      span.insert({top :  ulink});
+      switch (type){
+          case 'submission':
+            span.update(span.innerHTML + ' just submitted this!'); break;
+          case 'comment':
+            span.update(span.innerHTML + ' just left a comment!'); break;
+          case 'digg':
+            span.update(span.innerHTML + ' just dugg this!'); break;
+      }
+      return span;
   }
 });
 
