@@ -115,6 +115,7 @@ var Filters = {
 var TigrisItem = Class.create({
     initialize: function(payload) {
         this.type = payload.type;
+        console.log(payload);
         this.user = new DiggUser(payload.user);
         this.item = new DiggStory(payload.item);
         if (this.type === 'comment') {
@@ -199,21 +200,40 @@ var DiggStory = Class.create({
     this.description = payload.description;
     this.title       = payload.title;
     this.diggs       = payload.diggs;
+
+    //This happens every once in a while
+    if (!payload.diggs) {
+        this.diggs = 1;
+    }
+
     this.diggLink    = payload.href;
     this.realLink    = payload.link;
   },
   getDOM: function() {
     var item  = new Element('div',  {'class' : 'tigris-item', 'data-tigris-digg-id' : this.id});
-    var title = new Element('span', {'class' : 'item title'}).update(this.title);
-    var link  = new Element('a',    {'class' : 'item real-link', 'href' : this.realLink}).update(title);
+    var title = new Element('div',  {'class' : 'item title'});
+    var link  = new Element('a',    {'class' : 'item real-link', 'href' : this.realLink}).update(this.title);
     var space = new Element('span', {'class' : 'empty space'}).update('&nbsp;&nbsp;')
     var dLink = new Element('a',    {'class' : 'item digg-link', 'href' : this.diggLink}).update('View on Digg');
     var desc  = new Element('p',    {'class' : 'item desc'}).update(this.description);
 
-    item.insert(link);
-    item.insert(space);
-    item.insert(dLink);
-    item.insert(desc);
+    var count = new Element('div',  {'class' : 'digg-count'});
+    var cText = new Element('p').update(this.diggs);
+
+    var titleDesc = new Element('div', {'class' : 'title-description'});
+
+    title.insert(link);
+    title.insert(space);
+    title.insert(dLink);
+
+    titleDesc.insert(title);
+    titleDesc.insert(desc);
+
+    item.insert(titleDesc);
+
+    count.insert(cText);
+
+    item.insert({top: count})
 
     return item;
   },
@@ -271,8 +291,8 @@ var DiggUser = Class.create({
       return "http://digg.com/" + this.username;
   },
   getActivityDOM: function(type) {
-      var span  = new Element('span', {'class' : 'userline'});
-      var ulink = new Element('a',    {'class' : 'userlink', 'href' : this.getUserLink()}).update(this.username);
+      var span  = new Element('span', {'class' : 'activity'});
+      var ulink = new Element('a',    {'class' : 'user-page', 'href' : this.getUserLink()}).update(this.username);
       var div   = new Element('div');
 
       span.insert({top :  ulink});
@@ -313,7 +333,7 @@ var Filter = Class.create({
     var el    = new Element('input', {'id' : this.itemID, 'name' : this.itemID, 'class' : 'filter ' + this.fType, 'type' : 'text'});
     $('filters').insert(label);
     $('filters').insert(el);
-    $(this.itemID).observe('keyup', this.changeFilter.bind(this));
+    $(this.itemID).on('keyup', this.changeFilter.bind(this));
   },
 });
 

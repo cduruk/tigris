@@ -27,8 +27,8 @@ ul {
 .tigris-item-wrapper {
   border-bottom: 1px solid #ccc;
   display:block;
-  padding-top:5px;
   overflow:auto;
+  padding: 10px 0 10px 0;
 }
 
 .tigris-user {
@@ -42,6 +42,28 @@ ul {
 .tigris-item {
   margin-top: 10px;
   width: 500px;
+}
+
+.desc {
+    line-height: 16px;
+}
+
+.activity {
+    display:block;
+    text-align: center;
+}
+.digg-count {
+    float: left;
+    width: 70px;
+}
+
+.digg-count p{
+    font-size: 2em;
+    margin-top: 5px;
+}
+
+.title-description {
+    padding-left: 70px;
 }
 
 p.user {
