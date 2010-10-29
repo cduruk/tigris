@@ -6,6 +6,10 @@ body {
   margin-left: 20px;
 }
 
+a {
+  color: #4040d8;
+}
+
 a:link {
   text-decoration: none;
 }
@@ -18,7 +22,7 @@ h1, label, .title, .digg-count p, .activity {
   font: 16px/24px "Museo 300", Helvetica, Arial, sans-serif;
 }
 
-p,div {
+p, div {
     margin:0;
     padding:0;
 }
@@ -35,6 +39,7 @@ li p {
 
 ul {
   list-style: none;
+  margin-top: -10px;
 }
 
 .tigris-item-wrapper {
@@ -86,7 +91,7 @@ p.user {
 }
 
 #filter-container {
-  float:left;
+  float: left;
   width: 200px;
 }
 
