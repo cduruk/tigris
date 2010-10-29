@@ -104,6 +104,13 @@ var Tigris = Class.create({
       }
       return this.isUserFilter(needle) && this.isQueryFilter(needle);
     },
+    isTypeFilter: function(needle) {
+      var el   = $$('.selected')[0];
+      var type = el.readAttribute('title');
+      if (type === 'all') return true;
+
+      return (needle.type) === type;
+    },
     //This is necessary because submissions come as diggs too
     doesExist: function(needle) {
       var isDupe = false;
@@ -116,7 +123,7 @@ var Tigris = Class.create({
       return isDupe;
     },
     isOK: function(needle) {
-      return this.isQueryFilter(needle.item) && this.isUserFilter(needle) && !this.doesExist(needle);
+      return this.isQueryFilter(needle.item) && this.isUserFilter(needle) && !this.doesExist(needle) && this.isTypeFilter(needle);
     }
   };
 
