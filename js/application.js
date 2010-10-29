@@ -52,7 +52,15 @@ var Tigris = Class.create({
       allItems.push(tigItem);
     }
   },
+  createFilters : function() {
+    var qf = new Filter('query-filter', 'query');
+    var uf = new Filter('user-filter', 'user');
+
+    qf.createElement();
+    uf.createElement();
+  },
   run: function() {
+    this.createFilters();
     if (Config.supportsEvents) {
         this.doEventStreaming();
       } else {
@@ -325,12 +333,6 @@ var Filter = Class.create({
 });
 
 document.observe("dom:loaded", function() {
-  var qf = new Filter('query-filter', 'query');
-  var uf = new Filter('user-filter', 'user');
-
-  qf.createElement();
-  uf.createElement();
-
   t.setupConfig();
   t.run();
 });
