@@ -70,7 +70,7 @@ var Tigris = Class.create({
   });
 
   var Config = {
-    eventSourceURL : '/digg/stream?format=event-stream&types=comment',
+    eventSourceURL : '/digg/stream?format=event-stream',
     longPollURL    : '/digg/stream?return_after=1',
     supportsEvents : false,
     maxItems       : 15,

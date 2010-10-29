@@ -78,7 +78,7 @@ ul#items{
   font-size:.9em;
 }
 .mini-item {
-  padding-top:10px;
+  padding-top:10px  ;
 }
 
 .comment-text {
@@ -93,6 +93,7 @@ ul#items{
   float: left;
   font-size: 4em;
   width: 40px;
+  max-height:25px;
 }
 
 .digg-count {
@@ -109,7 +110,7 @@ ul#items{
 
 .digg-count p{
   font-size: 2em;
-  margin-top: 5px;
+  margin-top: 1px;
   text-align: center;
 }
 
