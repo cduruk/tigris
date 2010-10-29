@@ -7,7 +7,7 @@ body {
 }
 
 a {
-  color: #4040d8;
+  color: #3575D0;
 }
 
 a:link {
@@ -18,7 +18,7 @@ a:hover{
   text-decoration: underline;
 }
 
-h1, label, .title, .digg-count p, .activity {
+h1, label, .digg-count p {
   font: 16px/24px "Museo 300", Helvetica, Arial, sans-serif;
 }
 
@@ -58,7 +58,7 @@ ul {
 }
 
 .tigris-item {
-  margin-top: 5px;
+  margin-top: 10px;
 }
 
 .desc {
@@ -67,21 +67,24 @@ ul {
 }
 
 .activity {
-  font-size:0.875em;
+  font-size:.9em;
 }
 
 .digg-count {
+    background-color: #fff8ce;
     float: left;
     width: 70px;
+    padding:10px 0;
 }
 
 .digg-count p{
     font-size: 2em;
     margin-top: 5px;
+    text-align: center;
 }
 
 .title-description {
-    padding-left: 70px;
+    padding-left: 90px;
 }
 
 p.user {
@@ -109,7 +112,7 @@ p.user {
 }
 
 .title {
-  font-size:1.25em;
+  font-size:1.10em;
   font-weight: bold;
 }
 
@@ -118,5 +121,5 @@ a.digg-link {
 }
 
 .hovered {
-  background-color: #DDF;
+  background-color: #BED6EC;
 }
