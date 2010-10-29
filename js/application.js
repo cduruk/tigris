@@ -4,15 +4,20 @@ var Tigris = Class.create({
     if (typeof(EventSource) != 'undefined') {
       Config.supportsEvents  = true;
     }
-    if (window.location.search) {
-        this.setupConfig(window.location.search);
-    }
   },
-  setupConfig: function(searchStr){
-      var setupObj = searchStr.parseQuery();
+  setupConfig: function(){
+    if (window.location.search) {
+      var setupObj = window.location.search.parseQuery();
       if (setupObj.max) {
           Config.maxItems = +setupObj.max;
       }
+      if (setupObj.query) {
+        $('query-filter').setValue(setupObj.query);
+      }
+      if (setupObj.user) {
+        $('user-filter').setValue(setupObj.user);
+      }
+    }
   },
   doEventStreaming: function(){
     var source       = new EventSource(Config.eventSourceURL);
@@ -82,7 +87,7 @@ var Filters = {
     return needle.user.username.toLowerCase() == $('user-filter').getValue();
   },
   isFilter: function(needle) {
-    if (   ($('user-filter').getValue() == null || $('user-filter').getValue().length == 0) 
+    if (   ($('user-filter').getValue() == null || $('user-filter').getValue().length == 0)
         && ($('query-filter').getValue() == null || $('query-filter').getValue().length == 0)) {
       return true;
     }
@@ -325,10 +330,10 @@ document.observe("dom:loaded", function() {
 
   qf.createElement();
   uf.createElement();
+
+  t.setupConfig();
+  t.run();
 });
 
 var allItems = new Array();
 var t = new Tigris();
-
-t.initialize();
-t.run();
