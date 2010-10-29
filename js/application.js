@@ -280,7 +280,7 @@ var Tigris = Class.create({
     getDOM: function() {
       var div = new Element('div', {'class' : 'comment tigris-item'});
       var q   = new Element('p',   { 'class' : 'quote'}).update("&ldquo;")
-      var p   = new Element('p', {'class' : 'comment-text'}).update(this.text);
+      var p   = new Element('p',   {'class' : 'comment-text'}).update(this.text);
 
       div.insert(q);
       div.insert(p);
