@@ -23,8 +23,8 @@ h1, label, .digg-count p {
 }
 
 p, div {
-    margin:0;
-    padding:0;
+  margin:0;
+  padding:0;
 }
 
 h1 {
@@ -72,20 +72,20 @@ ul {
 }
 
 .digg-count {
-    background-color: #fff8ce;
-    float: left;
-    width: 70px;
-    padding:10px 0;
+  background-color: #fff8ce;
+  float: left;
+  width: 70px;
+  padding:10px 0;
 }
 
 .digg-count p{
-    font-size: 2em;
-    margin-top: 5px;
-    text-align: center;
+  font-size: 2em;
+  margin-top: 5px;
+  text-align: center;
 }
 
 .title-description {
-    padding-left: 90px;
+  padding-left: 90px;
 }
 
 p.user {
