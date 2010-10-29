@@ -3,6 +3,7 @@ var Tigris = Class.create({
     //Feature Detection
     if (typeof(EventSource) != 'undefined') {
       Config.supportsEvents  = true;
+      this.source = new EventSource(Config.eventSourceURL);
     }
   },
   setupConfig: function(){
@@ -20,8 +21,7 @@ var Tigris = Class.create({
     }
   },
   doEventStreaming: function(){
-    var source       = new EventSource(Config.eventSourceURL);
-    source.onmessage = function(event) {
+    this.source.onmessage = function(event) {
       if (Config.goOn) {
         var result = event.data.evalJSON();
         this.updateList(result);
@@ -53,9 +53,11 @@ var Tigris = Class.create({
       }
     },
     createFilters : function() {
+      var ts = new TypeSelector();
+      ts.createElement();
+
       var qf = new Filter('query-filter', 'query');
       var uf = new Filter('user-filter', 'user');
-
       qf.createElement();
       uf.createElement();
     },
@@ -70,8 +72,9 @@ var Tigris = Class.create({
   });
 
   var Config = {
-    eventSourceURL : '/digg/stream?format=event-stream',
-    longPollURL    : '/digg/stream?return_after=1',
+    hostURL        : '/digg/stream?',
+    eventSourceURL : '/digg/stream?' + Object.toQueryString({format:'event-stream'}),
+    longPollURL    : '/digg/stream?' + Object.toQueryString({return_after:'1'}),
     supportsEvents : false,
     maxItems       : 15,
     goOn           : true
@@ -320,6 +323,59 @@ var Tigris = Class.create({
         span.update(span.innerHTML + ' just dugg this!'); break;
       }
       return span;
+    }
+  });
+
+  var TypeSelector = Class.create({
+    initialize: function() {
+      var ul          = new Element('ul', {'id' : 'type-selector'});
+      var all         = new Element('li', {'class':'type all selected', 'title' : 'all'}).update('All');
+      var comments    = new Element('li', {'class':'type comments', 'title' : 'comment'}).update('Comments');
+      var submissions = new Element('li', {'class':'type submissions', 'title' : 'submission'}).update('Submissions');
+      var diggs       = new Element('li', {'class':'type diggs', 'title' : 'digg'}).update('Diggs');
+
+      ul.insert(all);
+      ul.insert(comments);
+      ul.insert(submissions);
+      ul.insert(diggs);
+
+      this.dom = ul;
+    },
+    createElement: function() {
+      $('filter-container').insert({top : this.dom});
+      $('type-selector').observe('click', this.handleSelection.bindAsEventListener(this));
+    },
+    handleSelection: function(event) {
+      var ul = event.findElement('ul');
+      var li = event.findElement('li');
+
+      ul.childElements().each(function(item) {item.removeClassName('selected')});
+      li.addClassName('selected');
+
+      this.manipulateURL(li.readAttribute('title'));
+    },
+    manipulateURL: function(title) {
+      //TODO: Surely, there's a smarter way but I'm tired.
+      var baseURL = Config.hostURL;
+      if (Config.supportsEvents) {
+        baseURL = baseURL + "format=event-stream";
+      } else {
+        baseURL = baseURL + "return_after=1";
+      }
+
+      if (title !== 'all') {
+        baseURL = baseURL + '&types=' + title;
+      }
+      if (Config.supportsEvents) {
+        t.source.close();
+        Config.eventSourceURL = baseURL;
+        t.source = new EventSource(Config.eventSourceURL)
+        t.doEventStreaming();
+        console.log(t.source);
+      } else {
+        Config.longPollingURL = baseURL;
+      }
+    console.log(baseURL);
     }
   });
 

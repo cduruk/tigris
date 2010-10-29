@@ -18,7 +18,7 @@ a:hover {
   text-decoration: underline;
 }
 
-h1, label, .digg-count p {
+h1, label, .digg-count p, #type-selector li {
   font: 16px/24px "Museo 300", Helvetica, Arial, sans-serif;
 }
 
@@ -39,6 +39,10 @@ li p {
 
 ul {
   list-style: none;
+}
+
+ul#type-selector {
+  padding:0;
 }
 
 ul#items {
@@ -163,4 +167,16 @@ a.digg-link {
 
 .hovered {
   background-color: #BED6EC;
+}
+
+.selected {
+  text-decoration: underline;
+}
+
+#type-selector li{
+  padding-left:5px;
+}
+
+#type-selector li.selected:before{
+/*  content: "»";*/
 }
