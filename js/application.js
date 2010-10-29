@@ -364,23 +364,13 @@ var Tigris = Class.create({
     manipulateURL: function(title) {
       //TODO: Surely, there's a smarter way but I'm tired.
       var baseURL = Config.hostURL;
-      if (Config.supportsEvents) {
-        baseURL = baseURL + "format=event-stream";
-      } else {
+      if (!Config.supportsEvents) {
         baseURL = baseURL + "return_after=1";
       }
-
       if (title !== 'all') {
         baseURL = baseURL + '&types=' + title;
       }
-      if (Config.supportsEvents) {
-        t.source.close();
-        Config.eventSourceURL = baseURL;
-        t.source = new EventSource(Config.eventSourceURL)
-        t.doEventStreaming();
-      } else {
-        Config.longPollURL = baseURL;
-      }
+      Config.longPollURL = baseURL;
     }
   });
 
