@@ -66,31 +66,24 @@ var Config = {
 
 // Modules
 var Filters = {
-  userFilter  : '',
-  queryFilter : '',
   counter     : 0,
 
-  setUserFilter: function(newValue) {
-    this.userFilter = newValue;
-  },
-  setQueryFilter: function(newValue) {
-    this.queryFilter = newValue;
-  },
   isQueryFilter: function(needle) {
-    if (this.queryFilter == null || this.queryFilter.length == 0) {
+    if ($('query-filter').getValue() == null || $('query-filter').getValue().length == 0) {
         return true;
     }
-    var query = this.queryFilter.toLowerCase();
+    var query = $('query-filter').getValue().toLowerCase();
     return needle.title.toLowerCase().include(query) || needle.description.toLowerCase().include(query);
   },
   isUserFilter: function(needle) {
-    if (this.userFilter == null || this.userFilter.length == 0) {
+    if ($('user-filter').getValue() == null || $('user-filter').getValue().length == 0) {
         return true;
     }
-    return needle.user.username.toLowerCase() == this.userFilter;
+    return needle.user.username.toLowerCase() == $('user-filter').getValue();
   },
   isFilter: function(needle) {
-    if ((this.userFilter == null || this.userFilter.length == 0) && (this.queryFilter == null || this.queryFilter.length == 0)) {
+    if (   ($('user-filter').getValue() == null || $('user-filter').getValue().length == 0) 
+        && ($('query-filter').getValue() == null || $('query-filter').getValue().length == 0)) {
       return true;
     }
     return this.isUserFilter(needle) && this.isQueryFilter(needle);
@@ -107,7 +100,7 @@ var Filters = {
     return isDupe;
   },
   isOK: function(needle) {
-    return this.isFilter(needle) && !this.doesExist(needle);
+    return this.isQueryFilter(needle.item) && this.isUserFilter(needle) && !this.doesExist(needle);
   }
 };
 
@@ -312,15 +305,6 @@ var Filter = Class.create({
     this.itemID = itemID;
     this.fType  = fType;
   },
-  changeFilter: function() {
-    var newFilter = $(this.itemID).getValue();
-    switch(this.fType) {
-      case 'query':
-        Filters.setQueryFilter(newFilter); break;
-      case 'user':
-        Filters.setUserFilter(newFilter); break;
-    }
-  },
   createElement: function() {
     var label = new Element('label', {'for' : this.itemID});
     switch(this.fType) {
@@ -332,7 +316,6 @@ var Filter = Class.create({
     var el    = new Element('input', {'id' : this.itemID, 'name' : this.itemID, 'class' : 'filter ' + this.fType, 'type' : 'text'});
     $('filters').insert(label);
     $('filters').insert(el);
-    $(this.itemID).on('keyup', this.changeFilter.bind(this));
   },
 });
 
