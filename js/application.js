@@ -267,29 +267,6 @@ var Tigris = Class.create({
       item.insert({top: count})
 
       return item;
-    },
-    createElement: function() {
-      var tItemDOM = this.getDOM();
-
-      $('items').insert({top: tItemDOM});
-      tItemDOM.setStyle('overflow:hidden');
-
-      var h = tItemDOM.getHeight();
-      tItemDOM.setStyle('height:0px');
-      tItemDOM.morph('height:'+h+'px',{ duration: .3 });
-
-      $(this.id).on('mouseover', function(){
-        $(this.id).addClassName('hovered');
-        Config.goOn = false;
-      });
-
-      $(this.id).on('mouseout', function(){
-        $(this.id).removeClassName('hovered');
-        Config.goOn = true;
-        if (!Config.supportsEvents) {
-          t.doLongPolling();
-        }
-      });
     }
   });
 
