@@ -70,7 +70,7 @@ var Tigris = Class.create({
   });
 
   var Config = {
-    eventSourceURL : '/digg/stream?format=event-stream&types=submission,digg',
+    eventSourceURL : '/digg/stream?format=event-stream&types=comment',
     longPollURL    : '/digg/stream?return_after=1',
     supportsEvents : false,
     maxItems       : 15,
@@ -196,6 +196,19 @@ var Tigris = Class.create({
       div.insert(itemDOM);
 
       return div;
+    },
+    getCommentDOM: function() {
+      var div     = new Element('div');
+      var miniDOM = this.item.getMiniDOM();
+
+      var span  = this.user.getActivityDOM('comment');
+      var cDOM  = this.comment.getDOM();
+
+      div.insert({top : span});
+      div.insert(miniDOM);
+      div.insert(cDOM);
+
+      return div;
     }
   });
 
@@ -214,12 +227,28 @@ var Tigris = Class.create({
       this.diggLink    = payload.href;
       this.realLink    = payload.link;
     },
+    getMiniDOM: function() {
+      var div   = new Element('div', {'class' : 'mini-item'});
+
+      var title = new Element('div', {'class' : 'item mini title'});
+      var link  = new Element('a',   {'class' : 'item mini real-link', 'href' : this.realLink}).update(this.title);
+      title.insert(link);
+
+      var count = new Element('div', {'class' : 'digg-count mini'});
+      var cText = new Element('p').update(this.diggs);
+      count.insert(cText);
+
+      div.insert(count);
+      div.insert(title);
+
+      return div;
+    },
     getDOM: function() {
-      var item  = new Element('div',  {'class' : 'tigris-item', 'data-tigris-digg-id' : this.id});
-      var title = new Element('div',  {'class' : 'item title'});
-      var link  = new Element('a',    {'class' : 'item real-link', 'href' : this.realLink}).update(this.title);
-      var dLink = new Element('a',    {'class' : 'item digg-link', 'href' : this.diggLink}).update('View on Digg');
-      var desc  = new Element('p',    {'class' : 'item desc'}).update(this.description);
+      var item  = new Element('div', {'class' : 'tigris-item', 'data-tigris-digg-id' : this.id});
+      var title = new Element('div', {'class' : 'item title'});
+      var link  = new Element('a',   {'class' : 'item real-link', 'href' : this.realLink}).update(this.title);
+      var dLink = new Element('a',   {'class' : 'item digg-link', 'href' : this.diggLink}).update('View on Digg');
+      var desc  = new Element('p',   {'class' : 'item desc'}).update(this.description);
 
       var count = new Element('div',  {'class' : 'digg-count'});
       var cText = new Element('p').update(this.diggs);
@@ -270,6 +299,16 @@ var Tigris = Class.create({
       this.buries = buries;
       this.diggs = diggs;
       this.timestamp = date_created;
+    },
+    getDOM: function() {
+      var div = new Element('div', {'class' : 'comment tigris-item'});
+      var q   = new Element('p',   { 'class' : 'quote'}).update("&ldquo;")
+      var p   = new Element('p', {'class' : 'comment-text'}).update(this.text);
+
+      div.insert(q);
+      div.insert(p);
+
+      return div;
     }
   })
 

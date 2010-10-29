@@ -64,6 +64,10 @@ ul#items{
   margin-top: 10px;
 }
 
+.tigris-item .comment{
+  clear:both;
+}
+
 .desc {
   margin-top:3px;
   line-height: 16px;
@@ -73,6 +77,23 @@ ul#items{
 .activity {
   font-size:.9em;
 }
+.mini-item {
+  padding-top:10px;
+}
+
+.comment-text {
+  font-size: 1.25em;
+  font-style: italic;
+  padding-top: 10px;
+  }
+
+.quote {
+  clear:both;
+  color: #DDD;
+  float: left;
+  font-size: 4em;
+  width: 40px;
+}
 
 .digg-count {
   background-color: #fff8ce;
@@ -81,10 +102,20 @@ ul#items{
   padding:10px 0;
 }
 
+.digg-count.mini {
+  padding: 1px 0px;
+  width: 30px;
+}
+
 .digg-count p{
   font-size: 2em;
   margin-top: 5px;
   text-align: center;
+}
+
+.digg-count.mini p{
+  font-size: 1em;
+  margin-top: 3px;
 }
 
 .title-description {
@@ -118,6 +149,11 @@ p.user {
 .title {
   font-size:1.10em;
   font-weight: bold;
+}
+
+.title.mini {
+  padding-left: 35px;
+  padding-top: 5px;
 }
 
 a.digg-link {
