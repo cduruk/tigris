@@ -4,11 +4,15 @@ var Tigris = Class.create({
     if (typeof(EventSource) != 'undefined') {
       Config.supportsEvents  = true;
     }
-    var hashStr = window.location.hash;
-    //Check if integer
-    if (hashStr.length != 0 && hashStr.substring(1)%1 == 0) {
-      Config.maxItems = hashStr.substring(1);
+    if (window.location.search) {
+        this.setupConfig(window.location.search);
     }
+  },
+  setupConfig: function(searchStr){
+      var setupObj = searchStr.parseQuery();
+      if (setupObj.max) {
+          Config.maxItems = +setupObj.max;
+      }
   },
   doEventStreaming: function(){
     var source       = new EventSource(Config.eventSourceURL);
