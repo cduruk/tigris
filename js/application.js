@@ -139,7 +139,7 @@ var Tigris = Class.create({
     },
     createElement: function() {
       var resultDOM = null;
-      var wrapper = new Element('li',   {'class' : 'tigris-item-wrapper', 'id' : this.id});
+      var wrapper   = new Element('li', {'class' : 'tigris-item-wrapper', 'id' : this.id});
 
       switch(this.type) {
         case 'submission':
@@ -200,9 +200,8 @@ var Tigris = Class.create({
     getCommentDOM: function() {
       var div     = new Element('div');
       var miniDOM = this.item.getMiniDOM();
-
-      var span  = this.user.getActivityDOM('comment');
-      var cDOM  = this.comment.getDOM();
+      var span    = this.user.getActivityDOM('comment');
+      var cDOM    = this.comment.getDOM();
 
       div.insert({top : span});
       div.insert(miniDOM);
@@ -224,12 +223,11 @@ var Tigris = Class.create({
         this.diggs = 1;
       }
 
-      this.diggLink    = payload.href;
-      this.realLink    = payload.link;
+      this.diggLink = payload.href;
+      this.realLink = payload.link;
     },
     getMiniDOM: function() {
       var div   = new Element('div', {'class' : 'mini-item'});
-
       var title = new Element('div', {'class' : 'item mini title'});
       var link  = new Element('a',   {'class' : 'item mini real-link', 'href' : this.realLink}).update(this.title);
       title.insert(link);
@@ -249,7 +247,6 @@ var Tigris = Class.create({
       var link  = new Element('a',   {'class' : 'item real-link', 'href' : this.realLink}).update(this.title);
       var dLink = new Element('a',   {'class' : 'item digg-link', 'href' : this.diggLink}).update('View on Digg');
       var desc  = new Element('p',   {'class' : 'item desc'}).update(this.description);
-
       var count = new Element('div',  {'class' : 'digg-count'});
       var cText = new Element('p').update(this.diggs);
 
@@ -279,7 +276,7 @@ var Tigris = Class.create({
     },
     getDOM: function() {
       var div = new Element('div', {'class' : 'comment tigris-item'});
-      var q   = new Element('p',   { 'class' : 'quote'}).update("&ldquo;")
+      var q   = new Element('p',   {'class' : 'quote'}).update("&ldquo;")
       var p   = new Element('p',   {'class' : 'comment-text'}).update(this.text);
 
       div.insert(q);
@@ -339,7 +336,7 @@ var Tigris = Class.create({
         case 'user':
         label.update('Filter by Username'); break;
       }
-      var el    = new Element('input', {'id' : this.itemID, 'name' : this.itemID, 'class' : 'filter ' + this.fType, 'type' : 'text'});
+      var el = new Element('input', {'id' : this.itemID, 'name' : this.itemID, 'class' : 'filter ' + this.fType, 'type' : 'text'});
       $('filters').insert(label);
       $('filters').insert(el);
     },

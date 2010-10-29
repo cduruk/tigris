@@ -14,7 +14,7 @@ a:link {
   text-decoration: none;
 }
 
-a:hover{
+a:hover {
   text-decoration: underline;
 }
 
@@ -23,8 +23,8 @@ h1, label, .digg-count p {
 }
 
 p, div {
-  margin:0;
-  padding:0;
+  margin: 0;
+  padding: 0;
 }
 
 h1 {
@@ -41,14 +41,14 @@ ul {
   list-style: none;
 }
 
-ul#items{
+ul#items {
   margin-top: -10px;
 }
 
 .tigris-item-wrapper {
   border-bottom: 1px solid #ccc;
-  display:block;
-  overflow:auto;
+  display: block;
+  overflow: auto;
   padding: 10px 0 5px 0;
 }
 
@@ -64,43 +64,43 @@ ul#items{
   margin-top: 10px;
 }
 
-.tigris-item .comment{
-  clear:both;
+.tigris-item .comment {
+  clear: both;
 }
 
 .desc {
-  margin-top:3px;
+  margin-top: 3px;
   line-height: 16px;
   width: 400px;
 }
 
 .activity {
-  font-size:.9em;
+  font-size: .9em;
 }
 .mini-item {
-  padding-top:10px  ;
+  padding-top: 10px ;
 }
 
 .comment-text {
   font-size: 1.25em;
   font-style: italic;
   padding-top: 10px;
-  }
+}
 
 .quote {
-  clear:both;
+  clear: both;
   color: #DDD;
   float: left;
   font-size: 4em;
   width: 40px;
-  max-height:25px;
+  max-height: 25px;
 }
 
 .digg-count {
   background-color: #fff8ce;
   float: left;
   width: 70px;
-  padding:10px 0;
+  padding: 10px 0;
 }
 
 .digg-count.mini {
@@ -108,13 +108,13 @@ ul#items{
   width: 30px;
 }
 
-.digg-count p{
+.digg-count p {
   font-size: 2em;
   margin-top: 1px;
   text-align: center;
 }
 
-.digg-count.mini p{
+.digg-count.mini p {
   font-size: 1em;
   margin-top: 3px;
 }
@@ -126,7 +126,7 @@ ul#items{
 p.user {
   margin: 0;
   padding: 0;
-  font-size:12px;
+  font-size: 12px;
 }
 
 #filter-container {
@@ -141,14 +141,14 @@ p.user {
 
 .filter {
   display: block;
-  margin-bottom:30px;
+  margin-bottom: 30px;
   font-size: 18px;
   font-weight: bold;
   width: 150px;
 }
 
 .title {
-  font-size:1.10em;
+  font-size: 1.10em;
   font-weight: bold;
 }
 
@@ -158,7 +158,7 @@ p.user {
 }
 
 a.digg-link {
-  font-size:11px;
+  font-size: 11px;
 }
 
 .hovered {
