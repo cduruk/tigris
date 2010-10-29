@@ -39,6 +39,9 @@ li p {
 
 ul {
   list-style: none;
+}
+
+ul#items{
   margin-top: -10px;
 }
 
