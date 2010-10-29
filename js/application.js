@@ -29,7 +29,6 @@ var Tigris = Class.create({
     }.bind(this);
   },
   doLongPolling : function() {
-    console.log('method: ' + Config.longPollURL);
     new Ajax.Request(Config.longPollURL,
       {
         method:'get',
@@ -374,7 +373,6 @@ var Tigris = Class.create({
         t.doEventStreaming();
       } else {
         Config.longPollURL = baseURL;
-        console.log(Config.longPollingURL);
       }
     }
   });
