@@ -115,7 +115,6 @@ var Filters = {
 var TigrisItem = Class.create({
     initialize: function(payload) {
         this.type = payload.type;
-        console.log(payload);
         this.user = new DiggUser(payload.user);
         this.item = new DiggStory(payload.item);
         if (this.type === 'comment') {
@@ -224,7 +223,7 @@ var DiggStory = Class.create({
 
     title.insert(link);
     title.insert(space);
-    title.insert(dLink);
+    // title.insert(dLink);
 
     titleDesc.insert(title);
     titleDesc.insert(desc);
