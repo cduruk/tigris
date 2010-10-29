@@ -62,6 +62,7 @@ ul {
 }
 
 .desc {
+  margin-top:3px;
   line-height: 16px;
   width: 400px;
 }
