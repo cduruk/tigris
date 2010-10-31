@@ -336,10 +336,10 @@ var Tigris = Class.create({
   var TypeSelector = Class.create({
     initialize: function() {
       var ul          = new Element('ul', {'id' : 'type-selector'});
-      var all         = new Element('li', {'class':'type all selected', 'title' : 'all'}).update('All');
-      var comments    = new Element('li', {'class':'type comments', 'title' : 'comment'}).update('Comments');
-      var submissions = new Element('li', {'class':'type submissions', 'title' : 'submission'}).update('Submissions');
-      var diggs       = new Element('li', {'class':'type diggs', 'title' : 'digg'}).update('Diggs');
+      var all         = new Element('li', {'class':'type all selected', 'title' : 'all'}).update(new Element('a', {'href' : '#'}).update('All'));
+      var comments    = new Element('li', {'class':'type comments', 'title' : 'comment'}).update(new Element('a', {'href' : '#'}).update('Comments'));
+      var submissions = new Element('li', {'class':'type submissions', 'title' : 'submission'}).update(new Element('a', {'href' : '#'}).update('Submissions'));
+      var diggs       = new Element('li', {'class':'type diggs', 'title' : 'digg'}).update(new Element('a', {'href' : '#'}).update('Diggs'));
 
       ul.insert(all);
       ul.insert(comments);
