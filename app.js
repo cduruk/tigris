@@ -35,5 +35,6 @@ app.get('/', function(req, res){
   res.render('index', {layout:false});
 });
 
-app.listen(3000);
+var port = process.env.PORT || 3000
+app.listen(port);
 console.log("Express server listening on port %d", app.address().port);
