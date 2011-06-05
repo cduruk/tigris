@@ -1,5 +1,5 @@
 {
-    "name": "application-name"
+    "name": "tigris"
   , "version": "0.0.1"
   , "private": true
   , "dependencies": {
