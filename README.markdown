@@ -7,18 +7,17 @@ Streaming API.
 Setup
 -----
 
-It expects a browser that supports the [Server-Sent events](http://dev.w3.org/html5/eventsource/). As of
+It expects a browser that supports the [Server-Sent events]
+(http://dev.w3.org/html5/eventsource/). As of
 this writing, Tigris works with Safari 5, Chrome 7+. It probably works
 with Firefox 4.
 
-It currently expects server-sent events be sent from `/digg/stream`. During
-development, I setup a proxy with nginx, which worked great.
+It currently expects server-sent events be sent from `/digg/stream`. It is
+currently written using a small Node.JS proxy for cross-domain requests.
 
 TODO
 ----
 
-* Use feature detection to make it work on FF.
-* Allow filtering by Digg/Submission/Comments.
 * Make the maximum number configurable (hash? from the page?)
 * Highlight the search terms.
 * Make it a lot less ugly.
