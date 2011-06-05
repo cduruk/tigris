@@ -9,8 +9,7 @@ Setup
 
 It expects a browser that supports the [Server-Sent events]
 (http://dev.w3.org/html5/eventsource/). As of
-this writing, Tigris works with Safari 5, Chrome 7+. It probably works
-with Firefox 4.
+this writing, Tigris works with Safari 5, Chrome 7+.
 
 It currently expects server-sent events be sent from `/digg/stream`. It is
 currently written using a small Node.JS proxy for cross-domain requests.
