@@ -33,8 +33,6 @@ app.get('/digg/stream', function(req, res){
 
   var myQ = url.parse(req.url);
 
-  // console.log(myQ)
-
   var options = {
     host: 'services.digg.com',
     port: 80,
