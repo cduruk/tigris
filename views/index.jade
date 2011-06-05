@@ -1,2 +1,14 @@
-h1= title
-p Welcome to #{title}
+!!!
+html
+  head
+    title= 'Tigris'
+    link(rel='stylesheet', href='/stylesheets/type.css')
+    link(rel='stylesheet', href='/stylesheets/application.css')
+  body
+    h1= 'Tigris'
+    div#filter-container
+      form#filters(name='filters')
+    div#content-container
+      ul#items
+    script(src='/javascripts/prototype.s2.min.js', type='text/javascript')
+    script(src='/javascripts/application.js', type='text/javascript')

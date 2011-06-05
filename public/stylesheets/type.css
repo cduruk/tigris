@@ -6,20 +6,20 @@ Fonts by Jos Buivenga (exljbris) -> www.exljbris.nl
   font-family: "Museo 300";
   src: url("type/Museo300-Regular.eot");
   src: local("Museo 300"), local("Museo-300"),
-    url("type/Museo300-Regular.otf") format("opentype"),
+    url("../types/Museo300-Regular.otf") format("opentype"),
     url("type/Museo300-Regular.svg#Museo-300") format("svg");
   }
 @font-face {
   font-family: "Museo 500";
   src: url("type/Museo500-Regular.eot");
   src: local("Museo 500"), local("Museo-500"),
-    url("type/Museo500-Regular.otf") format("opentype"),
+    url("../types/Museo500-Regular.otf") format("opentype"),
     url("type/Museo500-Regular.svg#Museo-500") format("svg");
   }
 @font-face {
   font-family: "Museo 700";
   src: url("type/Museo700-Regular.eot");
   src: local("Museo 700"), local("Museo-700"),
-    url("type/Museo700-Regular.otf") format("opentype"),
+    url("../types/Museo700-Regular.otf") format("opentype"),
     url("type/Museo700-Regular.svg#Museo-700") format("svg");
   }
